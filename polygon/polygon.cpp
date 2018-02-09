@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <stdlib.h>
+#include <utility>
 
 using namespace std;
 
@@ -20,11 +21,12 @@ class Polygon {
             FILE *file;
             file = fopen(fileName, "r");
 
+            int x1, y1, x2, y2;
             int numberOfLines;
             fscanf(file, "%d", &numberOfLines);
 
             for(int i = 0; i < numberOfLines; i++){
-                int x1, y1, x2, y2;
+                
                 fscanf(file, "%d %d %d %d", &x1, &y1, &x2, &y2);
                 
                 Point p1(x1, y1);
@@ -32,17 +34,50 @@ class Polygon {
                 Line temp(p1, p2);
                 lines.push_back(temp);
             }
+            
+            // get the max point
+            fscanf(file, "%d %d", &x1, &y1);
+            topLeft.setAxis(x1);
+            topLeft.setOrdinat(y1);
+            fscanf(file, "%d %d", &x1, &y1);
+            bottomRight.setAxis(x1);
+            bottomRight.setOrdinat(y1);
         }
 
-        void print() {
+        void print(int divx, int divy, int red, int green, int blue) {
             for(int i = 0; i < lines.size(); i++){
-                cout << lines[i].getFirstPoint().getAxis() << " " << lines[i].getFirstPoint().getOrdinat() << " "
-                    << lines[i].getSecondPoint().getAxis() << " " << lines[i].getSecondPoint().getOrdinat() << endl;
+                lines[i].print(divx, divy, red, green, blue);
             }
         }
 
         // TODO: implement methods
         void scanLine(Line g, int red, int green, int blue) {
+            // Make the line from g
+            pair<float, float> linearEQ = g.makeLine();
+            
+            // list of points
+            vector<Point> listOfIntersectPoints;
+            
+            for(int i = 0; i < lines.size(); i++){
+                // First, check if the point intersect
+                // ....
+
+
+                // find the intersect
+                Line temp = lines[i];
+                pair<float, float> tempEQ = temp.makeLine();
+
+                float x = (tempEQ.second - linearEQ.second) / (linearEQ.first - tempEQ.first);
+                float y = linearEQ.first * x + linearEQ.second;
+
+                Point tempPoint(x, y);
+                listOfIntersectPoints.push_back(tempPoint);
+            }
+
+            for(int i = 0; i < listOfIntersectPoints.size(); i++) {
+                cout << listOfIntersectPoints[i].getAxis() << " " << listOfIntersectPoints[i].getOrdinat() << endl;
+            }
+
 
         }
 
@@ -56,6 +91,7 @@ class Polygon {
 
     private:
         vector<Line> lines;
+        Point topLeft, bottomRight;
 };
 
 #endif
