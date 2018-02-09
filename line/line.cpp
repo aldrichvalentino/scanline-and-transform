@@ -48,8 +48,14 @@ class Line {
             float x2 = p2.getAxis() * 1.0;
             float y2 = p2.getOrdinat() * 1.0;
 
-            float a = (y2 - y1) / (x2 - x1);
-            float b = y1 - (x1 * (y2 - y1) / (x2 - x1));
+            float a,b;
+            if(x2 - x1 == 0){
+                a = 0;
+                b = 0;    
+            } else {
+                a = (y2 - y1) / (x2 - x1);
+                b = y1 - (x1 * (y2 - y1) / (x2 - x1));
+            }
 
             return make_pair(a, b);
         }

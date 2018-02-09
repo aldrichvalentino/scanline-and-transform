@@ -7,6 +7,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <utility>
+#include <math.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -60,24 +62,66 @@ class Polygon {
             
             for(int i = 0; i < lines.size(); i++){
                 // First, check if the point intersect
-                // ....
+                int firstOrdinatLine = g.getFirstPoint().getOrdinat();
+                int secondOrdinatLine = g.getSecondPoint().getOrdinat();
+                int firstOrdinatPolygon = lines[i].getFirstPoint().getOrdinat();
+                int secondOrdinatPolygon = lines[i].getSecondPoint().getOrdinat();
 
+                // cout << firstOrdinatLine << " " << secondOrdinatLine << " "
+                //     << firstOrdinatPolygon << " " << secondOrdinatPolygon << endl;
+                
+                if((firstOrdinatLine - firstOrdinatPolygon)*(secondOrdinatLine - secondOrdinatPolygon) < 0){
+                    // find the intersect
+                    pair<float, float> tempEQ = lines[i].makeLine();
 
-                // find the intersect
-                Line temp = lines[i];
-                pair<float, float> tempEQ = temp.makeLine();
-
-                float x = (tempEQ.second - linearEQ.second) / (linearEQ.first - tempEQ.first);
-                float y = linearEQ.first * x + linearEQ.second;
-
-                Point tempPoint(x, y);
-                listOfIntersectPoints.push_back(tempPoint);
+                    //cout << tempEQ.second << " " << tempEQ.first << endl;
+                    if(tempEQ.first == 0){
+                        Point tempPoint(lines[i].getFirstPoint().getAxis(), g.getFirstPoint().getOrdinat());
+                        listOfIntersectPoints.push_back(tempPoint);
+                    } else {
+                        float x = (tempEQ.second - linearEQ.second) / (linearEQ.first - tempEQ.first);
+                        float y = linearEQ.first * x + linearEQ.second;
+                        Point tempPoint(x, y);
+                        listOfIntersectPoints.push_back(tempPoint);
+                    }
+                }
             }
 
             for(int i = 0; i < listOfIntersectPoints.size(); i++) {
                 cout << listOfIntersectPoints[i].getAxis() << " " << listOfIntersectPoints[i].getOrdinat() << endl;
             }
 
+            // sort the points
+            for(int i = 0; i < listOfIntersectPoints.size() - 1; i++) {
+                int smallest = i;
+                for(int j = i+1; j < listOfIntersectPoints.size(); j++){
+                    if(listOfIntersectPoints[j].getAxis() < listOfIntersectPoints[smallest].getAxis()){
+                        smallest = j;
+                    }
+                }
+                Point temp(listOfIntersectPoints[smallest].getAxis(), listOfIntersectPoints[smallest].getOrdinat());
+                listOfIntersectPoints[smallest] = listOfIntersectPoints[i];
+                listOfIntersectPoints[i] = temp;
+            }
+
+            // delete unusable points, if there are double points
+            for(int i = 0; i < listOfIntersectPoints.size(); i++) {
+                if(listOfIntersectPoints[i].getAxis() == listOfIntersectPoints[i+1].getAxis() &&
+                    listOfIntersectPoints[i].getOrdinat() == listOfIntersectPoints[i+1].getOrdinat()){
+                        listOfIntersectPoints.erase(listOfIntersectPoints.begin() + i + 1);
+                    }
+                i++;
+            }
+
+            for(int i = 0; i < listOfIntersectPoints.size(); i++) {
+                
+                Line line(listOfIntersectPoints[i], listOfIntersectPoints[i+1]);
+                cout << listOfIntersectPoints[i].getAxis() << " " << listOfIntersectPoints[i].getOrdinat() << endl;
+                cout << listOfIntersectPoints[i+1].getAxis() << " " << listOfIntersectPoints[i+1].getOrdinat() << endl;
+                line.print(0,0, 255, 255, 255);
+
+                i++;
+            }
 
         }
 
