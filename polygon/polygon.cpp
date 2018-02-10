@@ -52,76 +52,107 @@ class Polygon {
             }
         }
 
-        // TODO: implement methods
-        void scanLine(Line g, int red, int green, int blue) {
-            // Make the line from g
-            pair<float, float> linearEQ = g.makeLine();
+        // TODO: make line dependent scan line
+        void scanLine(int red, int green, int blue) {
+            // make the scan line
+            Point scanLineLeft(topLeft.getAxis(), topLeft.getOrdinat());
+            int x = bottomRight.getAxis();
+            Point scanLineRight(x, topLeft.getOrdinat());
+            Line scanLine(scanLineLeft, scanLineRight);
+            // cout << "siap siap mau masuk" << endl;
             
-            // list of points
-            vector<Point> listOfIntersectPoints;
-            
-            for(int i = 0; i < lines.size(); i++){
-                // First, check if the point intersect
-                int firstOrdinatLine = g.getFirstPoint().getOrdinat();
-                int secondOrdinatLine = g.getSecondPoint().getOrdinat();
-                int firstOrdinatPolygon = lines[i].getFirstPoint().getOrdinat();
-                int secondOrdinatPolygon = lines[i].getSecondPoint().getOrdinat();
-
-                // cout << firstOrdinatLine << " " << secondOrdinatLine << " "
-                //     << firstOrdinatPolygon << " " << secondOrdinatPolygon << endl;
+            for(int scan = topLeft.getOrdinat(); scan < bottomRight.getOrdinat(); scan++){
+                // cout << "masuk loop " << scan << endl;
+                // Make the line from scan line
+                pair<float, float> linearEQ = scanLine.makeLine();
                 
-                if((firstOrdinatLine - firstOrdinatPolygon)*(secondOrdinatLine - secondOrdinatPolygon) < 0){
-                    // find the intersect
-                    pair<float, float> tempEQ = lines[i].makeLine();
+                // list of points
+                vector<Point> listOfIntersectPoints;
+                
+                for(int i = 0; i < lines.size(); i++){
+                    // First, check if the point intersect
+                    int firstOrdinatLine = scanLine.getFirstPoint().getOrdinat();
+                    int secondOrdinatLine = scanLine.getSecondPoint().getOrdinat();
+                    int firstOrdinatPolygon = lines[i].getFirstPoint().getOrdinat();
+                    int secondOrdinatPolygon = lines[i].getSecondPoint().getOrdinat();
 
-                    //cout << tempEQ.second << " " << tempEQ.first << endl;
-                    if(tempEQ.first == 0){
-                        Point tempPoint(lines[i].getFirstPoint().getAxis(), g.getFirstPoint().getOrdinat());
-                        listOfIntersectPoints.push_back(tempPoint);
-                    } else {
-                        float x = (tempEQ.second - linearEQ.second) / (linearEQ.first - tempEQ.first);
-                        float y = linearEQ.first * x + linearEQ.second;
-                        Point tempPoint(x, y);
-                        listOfIntersectPoints.push_back(tempPoint);
+                    // cout << firstOrdinatLine << " " << secondOrdinatLine << " "
+                    //     << firstOrdinatPolygon << " " << secondOrdinatPolygon << endl;
+                    
+                    if((firstOrdinatLine - firstOrdinatPolygon)*(secondOrdinatLine - secondOrdinatPolygon) < 0){
+                        // find the intersect
+                        pair<float, float> tempEQ = lines[i].makeLine();
+
+                        //cout << tempEQ.second << " " << tempEQ.first << endl;
+                        if(tempEQ.first == 0){
+                            Point tempPoint(lines[i].getFirstPoint().getAxis(), 
+                                        scanLine.getFirstPoint().getOrdinat());
+                            listOfIntersectPoints.push_back(tempPoint);
+                        } else {
+                            float x = (tempEQ.second - linearEQ.second) / (linearEQ.first - tempEQ.first);
+                            float y = linearEQ.first * x + linearEQ.second;
+                            Point tempPoint(x, y);
+                            listOfIntersectPoints.push_back(tempPoint);
+                        }
                     }
                 }
-            }
+                // cout << "selesai cek intersect" << endl;
 
-            for(int i = 0; i < listOfIntersectPoints.size(); i++) {
-                cout << listOfIntersectPoints[i].getAxis() << " " << listOfIntersectPoints[i].getOrdinat() << endl;
-            }
+                // for(int i = 0; i < listOfIntersectPoints.size(); i++) {
+                //     cout << listOfIntersectPoints[i].getAxis() << " " << listOfIntersectPoints[i].getOrdinat() << endl;
+                // }
 
-            // sort the points
-            for(int i = 0; i < listOfIntersectPoints.size() - 1; i++) {
-                int smallest = i;
-                for(int j = i+1; j < listOfIntersectPoints.size(); j++){
-                    if(listOfIntersectPoints[j].getAxis() < listOfIntersectPoints[smallest].getAxis()){
-                        smallest = j;
+                // cout << "bisa print" << endl;
+
+                // sort the points
+                if(listOfIntersectPoints.size() != 0){
+                    for(int i = 0; i < listOfIntersectPoints.size() - 1; i++) {
+                        int smallest = i;
+                        for(int j = i+1; j < listOfIntersectPoints.size(); j++){
+                            if(listOfIntersectPoints[j].getAxis() < listOfIntersectPoints[smallest].getAxis()){
+                                smallest = j;
+                            }
+                        }
+                        Point temp(listOfIntersectPoints[smallest].getAxis(), listOfIntersectPoints[smallest].getOrdinat());
+                        listOfIntersectPoints[smallest] = listOfIntersectPoints[i];
+                        listOfIntersectPoints[i] = temp;
+                    }
+
+                    // cout << "selesai sort" << endl;
+
+                    // delete unusable points, if there are double points
+                    // TODO: cek bener apa engga
+                    for(int i = 0; i < listOfIntersectPoints.size(); i++) {
+                        if(listOfIntersectPoints[i].getAxis() == listOfIntersectPoints[i+1].getAxis() &&
+                            listOfIntersectPoints[i].getOrdinat() == listOfIntersectPoints[i+1].getOrdinat()){
+                                listOfIntersectPoints.erase(listOfIntersectPoints.begin() + i + 1);
+                            }
+                        i++;
+                    }
+
+                    for(int i = 0; i < listOfIntersectPoints.size(); i++) {
+                        // don't color the border
+                        listOfIntersectPoints[i].setAxis(listOfIntersectPoints[i].getAxis()+1);
+                        listOfIntersectPoints[i+1].setAxis(listOfIntersectPoints[i+1].getAxis()-1);
+
+                        Line line(listOfIntersectPoints[i], listOfIntersectPoints[i+1]);
+                        // cout << listOfIntersectPoints[i].getAxis() << " " << listOfIntersectPoints[i].getOrdinat() << endl;
+                        // cout << listOfIntersectPoints[i+1].getAxis() << " " << listOfIntersectPoints[i+1].getOrdinat() << endl;
+                        line.print(0,0, 255, 255, 255);
+
+                        i++;
                     }
                 }
-                Point temp(listOfIntersectPoints[smallest].getAxis(), listOfIntersectPoints[smallest].getOrdinat());
-                listOfIntersectPoints[smallest] = listOfIntersectPoints[i];
-                listOfIntersectPoints[i] = temp;
-            }
-
-            // delete unusable points, if there are double points
-            for(int i = 0; i < listOfIntersectPoints.size(); i++) {
-                if(listOfIntersectPoints[i].getAxis() == listOfIntersectPoints[i+1].getAxis() &&
-                    listOfIntersectPoints[i].getOrdinat() == listOfIntersectPoints[i+1].getOrdinat()){
-                        listOfIntersectPoints.erase(listOfIntersectPoints.begin() + i + 1);
-                    }
-                i++;
-            }
-
-            for(int i = 0; i < listOfIntersectPoints.size(); i++) {
                 
-                Line line(listOfIntersectPoints[i], listOfIntersectPoints[i+1]);
-                cout << listOfIntersectPoints[i].getAxis() << " " << listOfIntersectPoints[i].getOrdinat() << endl;
-                cout << listOfIntersectPoints[i+1].getAxis() << " " << listOfIntersectPoints[i+1].getOrdinat() << endl;
-                line.print(0,0, 255, 255, 255);
-
-                i++;
+                //cout << "update sekali" << endl;
+                scanLineLeft.setOrdinat(scanLineLeft.getOrdinat() + 1);
+                scanLineRight.setOrdinat(scanLineRight.getOrdinat() + 1);
+                // move the scan line down
+                scanLine.setFirstPoint(scanLineLeft);
+                scanLine.setSecondPoint(scanLineRight);
             }
+            
+            
 
         }
 
