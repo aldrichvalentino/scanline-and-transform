@@ -141,7 +141,7 @@ class Line {
             p2.rotate(degree, topLeft.getAxis(), topLeft.getOrdinat(), bottomRight.getAxis(), bottomRight.getOrdinat());;
         }
 
-        void scale(int scale, Point topLeft, Point bottomRight) {
+        void scale(float scale, Point topLeft, Point bottomRight) {
             p1.scale(scale, topLeft.getAxis(), topLeft.getOrdinat(), bottomRight.getAxis(), bottomRight.getOrdinat());
             p2.scale(scale, topLeft.getAxis(), topLeft.getOrdinat(), bottomRight.getAxis(), bottomRight.getOrdinat());;
         }

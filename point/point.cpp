@@ -54,7 +54,7 @@ class Point {
             setOrdinat(int(nearbyint(finaly)));
         }
 
-        void scale(int scale, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY) {
+        void scale(float scale, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY) {
             float centerX = ((topLeftX + bottomRightX) / 2);
             float centerY = ((topLeftY + bottomRightY) / 2);
             

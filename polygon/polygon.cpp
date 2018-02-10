@@ -144,9 +144,30 @@ class Polygon {
             for(int i = 0;i < lines.size();i++) {
                 lines[i].rotate(degree, topLeft, bottomRight);
             }
+            
+            // Update the topLeft and topRight
+            int minX = 9999, minY = 9999, maxX = -1, maxY = -1;
+            for(int i = 0; i < lines.size(); i++){
+                if(lines[i].getFirstPoint().getAxis() < minX){
+                    minX = lines[i].getFirstPoint().getAxis();
+                }
+                if(lines[i].getFirstPoint().getOrdinat() < minY){
+                    minY = lines[i].getFirstPoint().getOrdinat();
+                }
+                if(lines[i].getSecondPoint().getAxis() > maxX){
+                    maxX = lines[i].getSecondPoint().getAxis();
+                }
+                if(lines[i].getSecondPoint().getOrdinat() > maxY){
+                    maxY = lines[i].getSecondPoint().getOrdinat();
+                }
+            }
+            topLeft.setAxis(minX);
+            topLeft.setOrdinat(minY);
+            bottomRight.setAxis(maxX);
+            bottomRight.setOrdinat(maxY);
         }
 
-        void scale(int scale) {
+        void scale(float scale) {
             int topLeftX = topLeft.getAxis();
             int topLeftY = topLeft.getOrdinat();
             int bottomRightX = bottomRight.getAxis();
