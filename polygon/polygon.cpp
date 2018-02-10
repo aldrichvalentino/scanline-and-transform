@@ -108,10 +108,7 @@ class Polygon {
                         listOfIntersectPoints[i] = temp;
                     }
 
-                    // cout << "selesai sort" << endl;
-
                     // delete unusable points, if there are double points
-                    // TODO: cek bener apa engga
                     for(int i = 0; i < listOfIntersectPoints.size(); i++) {
                         if(listOfIntersectPoints[i].getAxis() == listOfIntersectPoints[i+1].getAxis() &&
                             listOfIntersectPoints[i].getOrdinat() == listOfIntersectPoints[i+1].getOrdinat()){
