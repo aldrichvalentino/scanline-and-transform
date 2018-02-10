@@ -147,6 +147,12 @@ class Polygon {
         }
 
         void scale(int scale) {
+            int topLeftX = topLeft.getAxis();
+            int topLeftY = topLeft.getOrdinat();
+            int bottomRightX = bottomRight.getAxis();
+            int bottomRightY = bottomRight.getOrdinat();
+            topLeft.scale(scale, topLeftX, topLeftY, bottomRightX, bottomRightY);
+            bottomRight.scale(scale, topLeftX, topLeftY, bottomRightX, bottomRightY);
             for(int i = 0;i < lines.size();i++) {
                 lines[i].scale(scale, topLeft, bottomRight);
             }

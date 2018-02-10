@@ -1,4 +1,6 @@
+CC=g++
+CFLAGS=--std=c++11
 default:
-	@g++ -o main.exe main.cpp point/point.cpp line/line.cpp polygon/polygon.cpp utils/util.cpp --std=c++11
+	@$(CC) -o main.exe main.cpp point/point.cpp line/line.cpp polygon/polygon.cpp utils/util.cpp $(CFLAGS)
 run:
 	@./main.exe
