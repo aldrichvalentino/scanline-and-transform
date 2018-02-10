@@ -143,12 +143,16 @@ class Polygon {
             }
         }
 
-        void rotate(Point center, int degree) {
-
+        void rotate(int degree) {
+            for(int i = 0;i < lines.size();i++) {
+                lines[i].rotate(degree, topLeft, bottomRight);
+            }
         }
 
         void scale(int scale) {
-
+            for(int i = 0;i < lines.size();i++) {
+                lines[i].scale(scale, topLeft, bottomRight);
+            }
         }
 
     private:
