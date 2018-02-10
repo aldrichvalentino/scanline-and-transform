@@ -75,11 +75,8 @@ class Polygon {
                     int secondOrdinatLine = scanLine.getSecondPoint().getOrdinat();
                     int firstOrdinatPolygon = lines[i].getFirstPoint().getOrdinat();
                     int secondOrdinatPolygon = lines[i].getSecondPoint().getOrdinat();
-
-                    // cout << firstOrdinatLine << " " << secondOrdinatLine << " "
-                    //     << firstOrdinatPolygon << " " << secondOrdinatPolygon << endl;
                     
-                    if((firstOrdinatLine - firstOrdinatPolygon)*(secondOrdinatLine - secondOrdinatPolygon) < 0){
+                    if((firstOrdinatLine - firstOrdinatPolygon)*(secondOrdinatLine - secondOrdinatPolygon) <= 0){
                         // find the intersect
                         pair<float, float> tempEQ = lines[i].makeLine();
 
@@ -96,13 +93,6 @@ class Polygon {
                         }
                     }
                 }
-                // cout << "selesai cek intersect" << endl;
-
-                // for(int i = 0; i < listOfIntersectPoints.size(); i++) {
-                //     cout << listOfIntersectPoints[i].getAxis() << " " << listOfIntersectPoints[i].getOrdinat() << endl;
-                // }
-
-                // cout << "bisa print" << endl;
 
                 // sort the points
                 if(listOfIntersectPoints.size() != 0){
@@ -130,30 +120,27 @@ class Polygon {
                         i++;
                     }
 
-                    for(int i = 0; i < listOfIntersectPoints.size(); i++) {
-                        // don't color the border
-                        listOfIntersectPoints[i].setAxis(listOfIntersectPoints[i].getAxis()+1);
-                        listOfIntersectPoints[i+1].setAxis(listOfIntersectPoints[i+1].getAxis()-1);
+                    // only color if total point is even
+                    if(listOfIntersectPoints.size() > 1){
+                        for(int i = 0; i < listOfIntersectPoints.size(); i++) {
+                            // don't color the border
+                            listOfIntersectPoints[i].setAxis(listOfIntersectPoints[i].getAxis()+1);
+                            listOfIntersectPoints[i+1].setAxis(listOfIntersectPoints[i+1].getAxis()-1);
 
-                        Line line(listOfIntersectPoints[i], listOfIntersectPoints[i+1]);
-                        // cout << listOfIntersectPoints[i].getAxis() << " " << listOfIntersectPoints[i].getOrdinat() << endl;
-                        // cout << listOfIntersectPoints[i+1].getAxis() << " " << listOfIntersectPoints[i+1].getOrdinat() << endl;
-                        line.print(0,0, 255, 255, 255);
+                            Line line(listOfIntersectPoints[i], listOfIntersectPoints[i+1]);
+                            line.print(0,0, 255, 255, 255);
 
-                        i++;
+                            i++;
+                        }
                     }
                 }
                 
-                //cout << "update sekali" << endl;
                 scanLineLeft.setOrdinat(scanLineLeft.getOrdinat() + 1);
                 scanLineRight.setOrdinat(scanLineRight.getOrdinat() + 1);
                 // move the scan line down
                 scanLine.setFirstPoint(scanLineLeft);
                 scanLine.setSecondPoint(scanLineRight);
             }
-            
-            
-
         }
 
         void rotate(Point center, int degree) {
