@@ -55,41 +55,56 @@ class Polygon {
         // TODO: make line dependent scan line
         void scanLine(int red, int green, int blue) {
             // make the scan line
-            Point scanLineLeft(topLeft.getAxis(), topLeft.getOrdinat());
-            int x = bottomRight.getAxis();
-            Point scanLineRight(x, topLeft.getOrdinat());
-            Line scanLine(scanLineLeft, scanLineRight);
-            // cout << "siap siap mau masuk" << endl;
+            int scanLineY = topLeft.getOrdinat(); // Represent Y = c
+            // Point scanLineLeft(topLeft.getAxis(), topLeft.getOrdinat());
+            // int x = bottomRight.getAxis();
+            // Point scanLineRight(x, topLeft.getOrdinat());
+            // Line scanLine(scanLineLeft, scanLineRight);
             
-            for(int scan = topLeft.getOrdinat(); scan < bottomRight.getOrdinat(); scan++){
-                // cout << "masuk loop " << scan << endl;
+            for(int scan = topLeft.getOrdinat(); scan <= bottomRight.getOrdinat(); scan++){
                 // Make the line from scan line
-                pair<float, float> linearEQ = scanLine.makeLine();
+                // pair<float, float> linearEQ = scanLine.makeLine();
                 
                 // list of points
                 vector<Point> listOfIntersectPoints;
                 
                 for(int i = 0; i < lines.size(); i++){
                     // First, check if the point intersect
-                    int firstOrdinatLine = scanLine.getFirstPoint().getOrdinat();
-                    int secondOrdinatLine = scanLine.getSecondPoint().getOrdinat();
+                    // int firstOrdinatLine = scanLine.getFirstPoint().getOrdinat();
+                    // int secondOrdinatLine = scanLine.getSecondPoint().getOrdinat();
                     int firstOrdinatPolygon = lines[i].getFirstPoint().getOrdinat();
                     int secondOrdinatPolygon = lines[i].getSecondPoint().getOrdinat();
                     
-                    if((firstOrdinatLine - firstOrdinatPolygon)*(secondOrdinatLine - secondOrdinatPolygon) <= 0){
+                    if((scanLineY - firstOrdinatPolygon)*(scanLineY - secondOrdinatPolygon) <= 0){
                         // find the intersect
                         pair<float, float> tempEQ = lines[i].makeLine();
 
-                        //cout << tempEQ.second << " " << tempEQ.first << endl;
                         if(tempEQ.first == 0){
-                            Point tempPoint(lines[i].getFirstPoint().getAxis(), 
-                                        scanLine.getFirstPoint().getOrdinat());
+                            Point tempPoint(lines[i].getFirstPoint().getAxis(), scanLineY);
                             listOfIntersectPoints.push_back(tempPoint);
                         } else {
-                            float x = (tempEQ.second - linearEQ.second) / (linearEQ.first - tempEQ.first);
-                            float y = linearEQ.first * x + linearEQ.second;
-                            Point tempPoint(x, y);
+                            float x = (scanLineY - tempEQ.second) / tempEQ.first;
+                            // float y = linearEQ.first * x + linearEQ.second;
+                            Point tempPoint(x, scanLineY);
                             listOfIntersectPoints.push_back(tempPoint);
+                        }
+                    }
+
+                    // check if it has a corner
+                    for(int j = i + 1; j < lines.size(); j++){
+                        if(isCorner(lines[i], lines[j], scanLineY)){
+                            // add another point
+                            pair<float, float> tempEQ = lines[i].makeLine();
+
+                            if(tempEQ.first == 0){
+                                Point tempPoint(lines[i].getFirstPoint().getAxis(), scanLineY);
+                                listOfIntersectPoints.push_back(tempPoint);
+                            } else {
+                                float x = (scanLineY - tempEQ.second) / tempEQ.first;
+                                // float y = linearEQ.first * x + linearEQ.second;
+                                Point tempPoint(x, scanLineY);
+                                listOfIntersectPoints.push_back(tempPoint);
+                            }
                         }
                     }
                 }
@@ -109,17 +124,25 @@ class Polygon {
                     }
 
                     // delete unusable points, if there are double points
-                    for(int i = 0; i < listOfIntersectPoints.size(); i++) {
-                        if(listOfIntersectPoints[i].getAxis() == listOfIntersectPoints[i+1].getAxis() &&
-                            listOfIntersectPoints[i].getOrdinat() == listOfIntersectPoints[i+1].getOrdinat()){
-                                listOfIntersectPoints.erase(listOfIntersectPoints.begin() + i + 1);
-                            }
-                        i++;
-                    }
+                    // int count = (listOfIntersectPoints.size() % 2 == 1) ? 
+                    //         (listOfIntersectPoints.size() - 1) : listOfIntersectPoints.size();
+                    // for(int i = 0; i < count; i++) {
+                    //     if(listOfIntersectPoints[i].getAxis() == listOfIntersectPoints[i+1].getAxis() &&
+                    //         listOfIntersectPoints[i].getOrdinat() == listOfIntersectPoints[i+1].getOrdinat()){
+                    //             // Check if the line is a corner
+                                
+                    //             listOfIntersectPoints.erase(listOfIntersectPoints.begin() + i + 1);
+                    //         }
+                    //     i++;
+                    // }
 
-                    // only color if total point is even
+                    // only color if total point is more than one
                     if(listOfIntersectPoints.size() > 1){
-                        for(int i = 0; i < listOfIntersectPoints.size(); i++) {
+                        // check if the count is odd
+                        int count = (listOfIntersectPoints.size() % 2 == 1) ? 
+                            (listOfIntersectPoints.size() - 1) : listOfIntersectPoints.size();
+
+                        for(int i = 0; i < count; i++) {
                             // don't color the border
                             listOfIntersectPoints[i].setAxis(listOfIntersectPoints[i].getAxis()+1);
                             listOfIntersectPoints[i+1].setAxis(listOfIntersectPoints[i+1].getAxis()-1);
@@ -132,11 +155,13 @@ class Polygon {
                     }
                 }
                 
-                scanLineLeft.setOrdinat(scanLineLeft.getOrdinat() + 1);
-                scanLineRight.setOrdinat(scanLineRight.getOrdinat() + 1);
-                // move the scan line down
-                scanLine.setFirstPoint(scanLineLeft);
-                scanLine.setSecondPoint(scanLineRight);
+                // scanLineLeft.setOrdinat(scanLineLeft.getOrdinat() + 1);
+                // scanLineRight.setOrdinat(scanLineRight.getOrdinat() + 1);
+                // // move the scan line down
+                // scanLine.setFirstPoint(scanLineLeft);
+                // scanLine.setSecondPoint(scanLineRight);
+                scanLineY++;
+                // for(int j=0; j < 50000000; j++);
             }
         }
 
@@ -146,7 +171,10 @@ class Polygon {
             }
             
             // Update the topLeft and topRight
-            int minX = 9999, minY = 9999, maxX = -1, maxY = -1;
+            int minX = topLeft.getAxis(), 
+                minY = topLeft.getOrdinat(), 
+                maxX = bottomRight.getAxis(),
+                maxY = bottomRight.getOrdinat();
             for(int i = 0; i < lines.size(); i++){
                 if(lines[i].getFirstPoint().getAxis() < minX){
                     minX = lines[i].getFirstPoint().getAxis();
@@ -165,6 +193,9 @@ class Polygon {
             topLeft.setOrdinat(minY);
             bottomRight.setAxis(maxX);
             bottomRight.setOrdinat(maxY);
+
+            // cout << topLeft.getAxis() << " " << topLeft.getOrdinat() << endl;
+            // cout << bottomRight.getAxis() << " " << bottomRight.getOrdinat() << endl;
         }
 
         void scale(float scale) {
@@ -184,6 +215,38 @@ class Polygon {
             bottomRight.update(x, y);
             for(int i = 0; i < lines.size(); i++){
                 lines[i].update(x, y);
+            }
+        }
+
+        bool isCorner(Line firstLine, Line secondLine, int scanLine) {
+            int sameY, result;
+            if(firstLine.getFirstPoint().getOrdinat() == secondLine.getFirstPoint().getOrdinat()
+                    && firstLine.getFirstPoint().getOrdinat() == scanLine) {
+                sameY = firstLine.getFirstPoint().getOrdinat();
+                result = (sameY - firstLine.getSecondPoint().getOrdinat()) *
+                            (sameY - secondLine.getSecondPoint().getOrdinat());
+                return result < 0;
+            } else 
+            if(firstLine.getFirstPoint().getOrdinat() == secondLine.getSecondPoint().getOrdinat()
+                    && firstLine.getFirstPoint().getOrdinat() == scanLine) {
+                sameY = firstLine.getFirstPoint().getOrdinat();
+                result = (sameY - firstLine.getSecondPoint().getOrdinat()) *
+                            (sameY - secondLine.getFirstPoint().getOrdinat());
+                return result < 0;
+            } else 
+            if(firstLine.getSecondPoint().getOrdinat() == secondLine.getFirstPoint().getOrdinat()
+                    && firstLine.getSecondPoint().getOrdinat() == scanLine) {
+                sameY = firstLine.getSecondPoint().getOrdinat();
+                result = (sameY - firstLine.getFirstPoint().getOrdinat()) *
+                            (sameY - secondLine.getSecondPoint().getOrdinat());
+                return result < 0;
+            } else 
+            if(firstLine.getSecondPoint().getOrdinat() == secondLine.getSecondPoint().getOrdinat()
+                    && firstLine.getSecondPoint().getOrdinat() == scanLine) {
+                sameY = firstLine.getSecondPoint().getOrdinat();
+                result = (sameY - firstLine.getFirstPoint().getOrdinat()) *
+                            (sameY - secondLine.getFirstPoint().getOrdinat());
+                return result < 0;
             }
         }
 
