@@ -63,6 +63,11 @@ class Point {
             setAxis(int(nearbyint(finalx)));
             setOrdinat(int(nearbyint(finaly)));
         }
+
+        void update(int divx, int divy) {
+            x += divx;
+            y += divy;
+        }
     
     private:
         int x, y;

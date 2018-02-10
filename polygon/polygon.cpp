@@ -155,6 +155,14 @@ class Polygon {
             }
         }
 
+        void update(int x, int y) {
+            topLeft.update(x, y);
+            bottomRight.update(x, y);
+            for(int i = 0; i < lines.size(); i++){
+                lines[i].update(x, y);
+            }
+        }
+
     private:
         vector<Line> lines;
         Point topLeft, bottomRight;

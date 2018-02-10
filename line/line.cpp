@@ -120,7 +120,7 @@ class Line {
                 //setPixel(x0,y0);
                 location = (x0+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
                                 (y0+vinfo.yoffset) * finfo.line_length;
-                if(y0 > 10 && y0 < vinfo.yres -10){ // escape seg fault
+                if(y0 > 10 && y0 < vinfo.yres -10 && x0 > 5 && x0 < vinfo.xres){ // escape seg fault
                     *(fbp + location) = b;        // Some blue
                     *(fbp + location + 1) = g;     // A little green
                     *(fbp + location + 2) = r;    // A lot of red
@@ -144,6 +144,11 @@ class Line {
         void scale(int scale, Point topLeft, Point bottomRight) {
             p1.scale(scale, topLeft.getAxis(), topLeft.getOrdinat(), bottomRight.getAxis(), bottomRight.getOrdinat());
             p2.scale(scale, topLeft.getAxis(), topLeft.getOrdinat(), bottomRight.getAxis(), bottomRight.getOrdinat());;
+        }
+
+        void update(int x, int y){
+            p1.update(x, y);
+            p2.update(x, y);
         }
 
     private:
