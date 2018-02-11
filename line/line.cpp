@@ -146,10 +146,17 @@ class Line {
             p2.scale(scale, topLeft.getAxis(), topLeft.getOrdinat(), bottomRight.getAxis(), bottomRight.getOrdinat());;
         }
 
+		
+        void move(int h, int v, Point topLeft, Point bottomRight) {
+			p1.move(h,v,topLeft.getAxis(), topLeft.getOrdinat(), bottomRight.getAxis(), bottomRight.getOrdinat());
+			p2.move(h,v,topLeft.getAxis(), topLeft.getOrdinat(), bottomRight.getAxis(), bottomRight.getOrdinat());
+		}
+		
         void update(int x, int y){
             p1.update(x, y);
             p2.update(x, y);
         }
+        
 
     private:
         Point p1, p2;

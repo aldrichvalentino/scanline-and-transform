@@ -53,6 +53,16 @@ class Point {
             setAxis(int(nearbyint(finalx)));
             setOrdinat(int(nearbyint(finaly)));
         }
+        
+        void move(int h, int v,int topLeftX, int topLeftY, int bottomRightX, int bottomRightY){
+			float centerX = ((topLeftX + bottomRightX) / 2);
+            float centerY = ((topLeftY + bottomRightY) / 2);
+            float finalx = getAxis() + h;
+            float finaly = getOrdinat() + v;
+            
+            setAxis(int(nearbyint(finalx)));
+            setOrdinat(int(nearbyint(finaly)));
+		}
 
         void scale(float scale, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY) {
             float centerX = ((topLeftX + bottomRightX) / 2);

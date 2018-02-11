@@ -164,8 +164,44 @@ class Polygon {
                 // for(int j=0; j < 50000000; j++);
             }
         }
+        
+        void fall(){
+			int minX = topLeft.getAxis(), 
+                minY = topLeft.getOrdinat(), 
+                maxX = bottomRight.getAxis(),
+                maxY = bottomRight.getOrdinat();
+            
+			for(int i = 0;i < lines.size();i++) {
+                lines[i].move(0,1, topLeft, bottomRight);
+            }
+            topLeft.setAxis(minX);
+            topLeft.setOrdinat(minY+1);
+            bottomRight.setAxis(maxX);
+            bottomRight.setOrdinat(maxY+1);
+
+            
+		}
+		
+		void up(){
+			int minX = topLeft.getAxis(), 
+                minY = topLeft.getOrdinat(), 
+                maxX = bottomRight.getAxis(),
+                maxY = bottomRight.getOrdinat();
+            
+			for(int i = 0;i < lines.size();i++) {
+                lines[i].move(0,-1, topLeft, bottomRight);
+            }
+            topLeft.setAxis(minX);
+            topLeft.setOrdinat(minY-1);
+            bottomRight.setAxis(maxX);
+            bottomRight.setOrdinat(maxY-1);
+
+            
+		}
+		
 
         void rotate(int degree) {
+			
             for(int i = 0;i < lines.size();i++) {
                 lines[i].rotate(degree, topLeft, bottomRight);
             }
