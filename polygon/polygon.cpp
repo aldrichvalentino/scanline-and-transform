@@ -29,15 +29,15 @@ class Polygon {
             fscanf(file, "%d", &numberOfLines);
 
             for(int i = 0; i < numberOfLines; i++){
-                
+
                 fscanf(file, "%d %d %d %d", &x1, &y1, &x2, &y2);
-                
+
                 Point p1(x1, y1);
                 Point p2(x2, y2);
                 Line temp(p1, p2);
                 lines.push_back(temp);
             }
-            
+
             // get the max point
             fscanf(file, "%d %d", &x1, &y1);
             topLeft.setAxis(x1);
@@ -68,21 +68,21 @@ class Polygon {
             // int x = bottomRight.getAxis();
             // Point scanLineRight(x, topLeft.getOrdinat());
             // Line scanLine(scanLineLeft, scanLineRight);
-            
+
             for(int scan = topLeft.getOrdinat(); scan <= bottomRight.getOrdinat(); scan++){
                 // Make the line from scan line
                 // pair<float, float> linearEQ = scanLine.makeLine();
-                
+
                 // list of points
                 vector<Point> listOfIntersectPoints;
-                
+
                 for(int i = 0; i < lines.size(); i++){
                     // First, check if the point intersect
                     // int firstOrdinatLine = scanLine.getFirstPoint().getOrdinat();
                     // int secondOrdinatLine = scanLine.getSecondPoint().getOrdinat();
                     int firstOrdinatPolygon = lines[i].getFirstPoint().getOrdinat();
                     int secondOrdinatPolygon = lines[i].getSecondPoint().getOrdinat();
-                    
+
                     if((scanLineY - firstOrdinatPolygon)*(scanLineY - secondOrdinatPolygon) <= 0){
                         // find the intersect
                         pair<float, float> tempEQ = lines[i].makeLine();
@@ -132,13 +132,13 @@ class Polygon {
                     }
 
                     // delete unusable points, if there are double points
-                    // int count = (listOfIntersectPoints.size() % 2 == 1) ? 
+                    // int count = (listOfIntersectPoints.size() % 2 == 1) ?
                     //         (listOfIntersectPoints.size() - 1) : listOfIntersectPoints.size();
                     // for(int i = 0; i < count; i++) {
                     //     if(listOfIntersectPoints[i].getAxis() == listOfIntersectPoints[i+1].getAxis() &&
                     //         listOfIntersectPoints[i].getOrdinat() == listOfIntersectPoints[i+1].getOrdinat()){
                     //             // Check if the line is a corner
-                                
+
                     //             listOfIntersectPoints.erase(listOfIntersectPoints.begin() + i + 1);
                     //         }
                     //     i++;
@@ -147,7 +147,7 @@ class Polygon {
                     // only color if total point is more than one
                     if(listOfIntersectPoints.size() > 1){
                         // check if the count is odd
-                        int count = (listOfIntersectPoints.size() % 2 == 1) ? 
+                        int count = (listOfIntersectPoints.size() % 2 == 1) ?
                             (listOfIntersectPoints.size() - 1) : listOfIntersectPoints.size();
 
                         for(int i = 0; i < count; i++) {
@@ -162,7 +162,7 @@ class Polygon {
                         }
                     }
                 }
-                
+
                 // scanLineLeft.setOrdinat(scanLineLeft.getOrdinat() + 1);
                 // scanLineRight.setOrdinat(scanLineRight.getOrdinat() + 1);
                 // // move the scan line down
@@ -172,13 +172,13 @@ class Polygon {
                 // for(int j=0; j < 50000000; j++);
             }
         }
-        
+
         void fall(){
-			int minX = topLeft.getAxis(), 
-                minY = topLeft.getOrdinat(), 
+			int minX = topLeft.getAxis(),
+                minY = topLeft.getOrdinat(),
                 maxX = bottomRight.getAxis(),
                 maxY = bottomRight.getOrdinat();
-            
+
 			for(int i = 0;i < lines.size();i++) {
                 lines[i].move(0,1, topLeft, bottomRight);
             }
@@ -187,15 +187,15 @@ class Polygon {
             bottomRight.setAxis(maxX);
             bottomRight.setOrdinat(maxY+1);
 
-            
+
 		}
-		
+
 		void up(){
-			int minX = topLeft.getAxis(), 
-                minY = topLeft.getOrdinat(), 
+			int minX = topLeft.getAxis(),
+                minY = topLeft.getOrdinat(),
                 maxX = bottomRight.getAxis(),
                 maxY = bottomRight.getOrdinat();
-            
+
 			for(int i = 0;i < lines.size();i++) {
                 lines[i].move(0,-1, topLeft, bottomRight);
             }
@@ -204,19 +204,19 @@ class Polygon {
             bottomRight.setAxis(maxX);
             bottomRight.setOrdinat(maxY-1);
 
-            
+
 		}
-		
+
 
         void rotate(int degree) {
-			
+
             for(int i = 0;i < lines.size();i++) {
                 lines[i].rotate(degree, topLeft, bottomRight);
             }
-            
+
             // Update the topLeft and topRight
-            int minX = topLeft.getAxis(), 
-                minY = topLeft.getOrdinat(), 
+            int minX = topLeft.getAxis(),
+                minY = topLeft.getOrdinat(),
                 maxX = bottomRight.getAxis(),
                 maxY = bottomRight.getOrdinat();
             for(int i = 0; i < lines.size(); i++){
@@ -278,21 +278,21 @@ class Polygon {
                 result = (sameY - firstLine.getSecondPoint().getOrdinat()) *
                             (sameY - secondLine.getSecondPoint().getOrdinat());
                 return result < 0;
-            } else 
+            } else
             if(firstLine.getFirstPoint().getOrdinat() == secondLine.getSecondPoint().getOrdinat()
                     && firstLine.getFirstPoint().getOrdinat() == scanLine) {
                 sameY = firstLine.getFirstPoint().getOrdinat();
                 result = (sameY - firstLine.getSecondPoint().getOrdinat()) *
                             (sameY - secondLine.getFirstPoint().getOrdinat());
                 return result < 0;
-            } else 
+            } else
             if(firstLine.getSecondPoint().getOrdinat() == secondLine.getFirstPoint().getOrdinat()
                     && firstLine.getSecondPoint().getOrdinat() == scanLine) {
                 sameY = firstLine.getSecondPoint().getOrdinat();
                 result = (sameY - firstLine.getFirstPoint().getOrdinat()) *
                             (sameY - secondLine.getSecondPoint().getOrdinat());
                 return result < 0;
-            } else 
+            } else
             if(firstLine.getSecondPoint().getOrdinat() == secondLine.getSecondPoint().getOrdinat()
                     && firstLine.getSecondPoint().getOrdinat() == scanLine) {
                 sameY = firstLine.getSecondPoint().getOrdinat();
@@ -312,6 +312,7 @@ class Polygon {
                 this->scanLine(150, 0, 150);
                 this->print(0, 0, 0, 255, 0);
                 this->fall();
+                this->update(1,0);
             }
             height *= ratio;
             for (int i = 0; i < height; ++i){
@@ -320,6 +321,7 @@ class Polygon {
                 this->scanLine(150, 0, 150);
                 this->print(0, 0, 0, 255, 0);
                 this->up();
+                this->update(1,0);
             }
         }
     }
