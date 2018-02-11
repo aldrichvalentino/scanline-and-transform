@@ -156,7 +156,7 @@ class Polygon {
                             listOfIntersectPoints[i+1].setAxis(listOfIntersectPoints[i+1].getAxis()-1);
 
                             Line line(listOfIntersectPoints[i], listOfIntersectPoints[i+1]);
-                            line.print(0,0, 255, 255, 255);
+                            line.print(0,0, red, green, blue);
 
                             i++;
                         }
