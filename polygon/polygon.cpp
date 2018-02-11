@@ -9,6 +9,7 @@
 #include <utility>
 #include <math.h>
 #include <algorithm>
+#include "../utils/util.cpp"
 
 using namespace std;
 
@@ -286,6 +287,27 @@ class Polygon {
             }
         }
 
+
+    void bounce(float ratio){
+        float height = 200;
+        while (height * ratio > 0) {
+            for (int i = 0; i < height; ++i){
+                Util::clearScreen();
+
+                this->scanLine(150, 0, 150);
+                this->print(0, 0, 0, 255, 0);
+                this->fall();
+            }
+            height *= ratio;
+            for (int i = 0; i < height; ++i){
+                Util::clearScreen();
+
+                this->scanLine(150, 0, 150);
+                this->print(0, 0, 0, 255, 0);
+                this->up();
+            }
+        }
+    }
     private:
         vector<Line> lines;
         Point topLeft, bottomRight;
