@@ -53,6 +53,13 @@ class Polygon {
             }
         }
 
+        Point getTopLeft() {
+            return topLeft;
+        }
+        Point getBottomRight() {
+            return bottomRight;
+        }
+
         // TODO: make line dependent scan line
         void scanLine(int red, int green, int blue) {
             // make the scan line
@@ -244,6 +251,14 @@ class Polygon {
             bottomRight.scale(scale, topLeftX, topLeftY, bottomRightX, bottomRightY);
             for(int i = 0;i < lines.size();i++) {
                 lines[i].scale(scale, topLeft, bottomRight);
+            }
+        }
+
+        void scaleByPoint(float scale, Point P) {
+            topLeft.scaleByPoint(scale, P);
+            bottomRight.scaleByPoint(scale, P);
+            for(int i = 0;i < lines.size();i++) {
+                lines[i].scaleByPoint(scale, P);
             }
         }
 

@@ -136,14 +136,19 @@ class Line {
             close(fbfd);
         }
 
-        void rotate(int degree, Point topLeft, Point bottomRight) {
+        void rotate(float degree, Point topLeft, Point bottomRight) {
             p1.rotate(degree, topLeft.getAxis(), topLeft.getOrdinat(), bottomRight.getAxis(), bottomRight.getOrdinat());
             p2.rotate(degree, topLeft.getAxis(), topLeft.getOrdinat(), bottomRight.getAxis(), bottomRight.getOrdinat());;
         }
 
         void scale(float scale, Point topLeft, Point bottomRight) {
             p1.scale(scale, topLeft.getAxis(), topLeft.getOrdinat(), bottomRight.getAxis(), bottomRight.getOrdinat());
-            p2.scale(scale, topLeft.getAxis(), topLeft.getOrdinat(), bottomRight.getAxis(), bottomRight.getOrdinat());;
+            p2.scale(scale, topLeft.getAxis(), topLeft.getOrdinat(), bottomRight.getAxis(), bottomRight.getOrdinat());
+        }
+
+        void scaleByPoint(float scale, Point P) {
+            p1.scaleByPoint(scale, P);
+            p2.scaleByPoint(scale, P);
         }
 
 		

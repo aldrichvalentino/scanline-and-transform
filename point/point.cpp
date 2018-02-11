@@ -50,8 +50,8 @@ class Point {
             float finalx = (tempx * cosinus + tempy * minsin) + centerX; 
             float finaly = (tempx * sinus + tempy * cosinus) + centerY;
             //round to int
-            setAxis(int(nearbyint(finalx)));
-            setOrdinat(int(nearbyint(finaly)));
+            setAxis(finalx);
+            setOrdinat(finaly);
         }
         
         void move(int h, int v,int topLeftX, int topLeftY, int bottomRightX, int bottomRightY){
@@ -60,9 +60,16 @@ class Point {
             float finalx = getAxis() + h;
             float finaly = getOrdinat() + v;
             
-            setAxis(int(nearbyint(finalx)));
-            setOrdinat(int(nearbyint(finaly)));
+            setAxis(finalx);
+            setOrdinat(finaly);
 		}
+
+        void scaleByPoint(float scale, Point P) {
+            float finalx = scale * (getAxis() - P.getAxis()) + P.getAxis();
+            float finaly = scale * (getOrdinat() - P.getOrdinat()) + P.getOrdinat();
+            setAxis(finalx);
+            setOrdinat(finaly);
+        }
 
         void scale(float scale, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY) {
             float centerX = ((topLeftX + bottomRightX) / 2);
@@ -70,8 +77,8 @@ class Point {
             
             float finalx = scale * (getAxis() - centerX) + centerX;
             float finaly = scale * (getOrdinat() - centerY) + centerY;
-            setAxis(int(nearbyint(finalx)));
-            setOrdinat(int(nearbyint(finaly)));
+            setAxis(finalx);
+            setOrdinat(finaly);
         }
 
         void update(int divx, int divy) {
@@ -80,7 +87,7 @@ class Point {
         }
     
     private:
-        int x, y;
+        float x, y;
 };
 
 #endif
