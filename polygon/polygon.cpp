@@ -19,6 +19,8 @@ class Polygon {
 
         }
 
+        ~Polygon(){
+        }
         /* Open a file with the fileName */
         Polygon(char * fileName) {
             FILE *file;
@@ -319,6 +321,26 @@ class Polygon {
                 return result < 0;
             }
         }
+
+    bool isHitFromBottom(Polygon p) {
+        return (this->getBottomRight().getOrdinat() > p.getTopLeft().getOrdinat());
+    }
+
+    bool isHitFromTop(Polygon p) {
+        return (this->getTopLeft().getOrdinat() < p.getBottomRight().getOrdinat());
+    }
+
+    bool isHitFromRight(Polygon p) {
+        return (this->getBottomRight().getAxis() > p.getTopLeft().getAxis());
+    }
+
+    bool isHitFromLeft(Polygon p) {
+        return (this->getTopLeft().getAxis() < p.getBottomRight().getAxis());
+    }
+
+    bool isHitBy(Polygon p) {
+        return (this->isHitFromBottom(p) && this->isHitFromLeft(p) && this->isHitFromRight(p) && this->isHitFromTop(p));
+    }
 
 
     void bounce(float ratio){

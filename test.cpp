@@ -25,6 +25,7 @@ int main() {
     float middlePlaneY = (plane.getTopLeft().getOrdinat() + plane.getBottomRight().getOrdinat()) / 2;
     Point middlePointPlane = Point(middlePlaneX, middlePlaneY + 400);
 
+
     plane.update(300,400);
     bullet.update(100, 1000);
     tire.scale(0.2);
@@ -43,6 +44,8 @@ int main() {
     Point p2(1500, 900);
     Line surface(p1,p2);
     bool hit =  false;
+
+
     while(i < 1.12) {
         Util::clearScreen();
 
@@ -92,16 +95,13 @@ int main() {
             } 
     }
 
-    int height = 400;
-
-    // if(plane.isHitBy(bullet)) {
-    //     hit = true;
-    // }
-
+    int height = tire2.getBottomRight().getAxis();
+    
     if(hit) {
-        while (j<=height) {
+        while (j <= height) {
             Util::clearScreen();
-
+            cout << height << " "<< j << endl;
+            
             surface.print(0,0,255,255,255);
             parachute.scanLine(255,108,180);
             parachute.print(0,0,255,255,255);
