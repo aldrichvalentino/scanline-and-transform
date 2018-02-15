@@ -15,13 +15,13 @@ int main() {
     Polygon propeller2 ((char*)"objects/propeller.txt");
     Polygon bullet((char*)"objects/bullet.txt");
     Polygon parachute((char*)"objects/parachuteperson.txt");
-    int dx = 700;
-    int dy = 0;
+    int dx = 500;
+    int dy = 150;
     parachute.update(dx, dy);
 
     float middlePlaneX = (plane.getTopLeft().getAxis() + plane.getBottomRight().getAxis()) / 2;
     float middlePlaneY = (plane.getTopLeft().getOrdinat() + plane.getBottomRight().getOrdinat()) / 2;
-    Point middlePointPlane = Point(middlePlaneX, middlePlaneY + 750);
+    Point middlePointPlane = Point(middlePlaneX, middlePlaneY + 400);
 
     plane.update(300,400);
     bullet.update(100, 1000);
@@ -36,8 +36,15 @@ int main() {
     float i = 1;
     int j = 0;
     int u = 0;
+
+    Point p1(100, 900);
+    Point p2(1500, 900);
+    Line surface(p1,p2);
+    bool hit =  false;
     while(i < 1.12) {
         Util::clearScreen();
+
+        surface.print(0,0,255,255,255);
         i += 0.005;
         tire.scaleByPoint(i, middlePointPlane);
         plane.scaleByPoint(i, middlePointPlane);
@@ -53,75 +60,83 @@ int main() {
         propeller.scanLine(0, 128, 0);
         propeller2.print(0, 0, 0, 128, 0);
         propeller2.scanLine(0, 128, 0);
-        if(i < 1.082) {
-            bullet.scanLine(255, 0, 0);
-            bullet.print(0,0,0,0,0);
-            bullet.update(30,-58);
-            bullet.rotate(2.5);
-            tire2.scaleByPoint(i, middlePointPlane);
-            tire2.print(0, 0, 70, 70, 70);
-            tire2.scanLine(130, 130, 130);  
-            usleep(100000);
+        //if(i < 1.082) {
+        if(plane.getBottomRight().getOrdinat() < bullet.getTopLeft().getOrdinat()) {
+                bullet.scanLine(255, 0, 0);
+                bullet.print(0,0,0,0,0);
+                bullet.update(30,-58);
+                bullet.rotate(2.5);
+                tire2.scaleByPoint(i, middlePointPlane);
+                tire2.print(0, 0, 70, 70, 70);
+                tire2.scanLine(130, 130, 130);  
+                usleep(100000);
         } else {
+                hit = true;
+                parachute.scanLine(255,108,180);
+                parachute.print(0,0,255,255,255);
+                tire2.print(0, 0, 70, 70, 70);
+                tire2.scanLine(130, 130, 130);  
+                j++; u++;
+                if (u<=20) {
+                    parachute.update(-7, -3);
+                    tire2.update(3,5.5);
+                    usleep(100000);
+                } else {
+                    parachute.update(0,2);
+                    tire2.update(3,5.5);
+                    usleep(100000);
+                }
+            } 
+        }     
+    int height = 400;
+    if(plane.getBottomRight().getOrdinat() >= bullet.getTopLeft().getOrdinat()) {
+        hit = true;
+    }
+    if(hit) {
+        while (j<=height) {
+            Util::clearScreen();
+
+            surface.print(0,0,255,255,255);
             parachute.scanLine(255,108,180);
-    	    parachute.print(0,0,255,255,255);
+            parachute.print(0,0,255,255,255);
             tire2.print(0, 0, 70, 70, 70);
             tire2.scanLine(130, 130, 130);  
-            j++; u++;
+            if(j < 70) {
+                tire2.update(2,5);
+            } else if (j >= 70 && j < 85) {
+                tire2.update(2,-7);
+            }
+            else if (j >= 85 && j < 100) {
+                tire2.update(1, 7);
+            }
+            else if (j >= 100 && j < 115) {
+                tire2.update(1, -5);
+            }
+            else if (j >= 115 && j < 130) {
+                tire2.update(1, 5);
+            }
+            else if (j >= 130 && j < 145) {
+                tire2.update(1, -3);
+            }
+            else if (j >= 145 && j < 160) {
+                tire2.update(1, 3);
+            }
+            else if (j >= 160 && j < 175) {
+                tire2.update(1, -1);
+            }
+            else if (j >= 175 && j < 190) {
+                tire2.update(1, 1);
+            }
             if (u<=20) {
                 parachute.update(-7, -3);
-                tire2.update(3,10);
-                usleep(60000);
-            } else {
-                parachute.update(0,2);
-                tire2.update(3,10);
-                usleep(60000);
+                usleep(100000);
             }
-        }      
-    }
-    int height = 400;
-
-    while (j<=height) {
-    	Util::clearScreen();
-    	parachute.scanLine(255,108,180);
-    	parachute.print(0,0,255,255,255);
-        tire2.print(0, 0, 70, 70, 70);
-        tire2.scanLine(130, 130, 130);  
-        if(j < 70) {
-            tire2.update(2,10);
-        } else if (j >= 70 && j < 85) {
-            tire2.update(2,-7);
+            else {
+                parachute.update(0,2);
+                usleep(100000);
+            }
+            j++; u++;
         }
-        else if (j >= 85 && j < 100) {
-            tire2.update(1, 7);
-        }
-        else if (j >= 100 && j < 115) {
-            tire2.update(1, -5);
-        }
-        else if (j >= 115 && j < 130) {
-            tire2.update(1, 5);
-        }
-        else if (j >= 130 && j < 145) {
-            tire2.update(1, -3);
-        }
-        else if (j >= 145 && j < 160) {
-            tire2.update(1, 3);
-        }
-        else if (j >= 160 && j < 175) {
-            tire2.update(1, -1);
-        }
-        else if (j >= 175 && j < 190) {
-            tire2.update(1, 1);
-        }
-    	if (u<=20) {
-    		parachute.update(-7, -3);
-    		usleep(60000);
-    	}
-    	else {
-    		parachute.update(0,2);
-    		usleep(60000);
-    	}
-    	j++; u++;
     }
 
     return 0;

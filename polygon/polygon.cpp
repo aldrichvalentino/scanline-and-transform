@@ -102,13 +102,13 @@ class Polygon {
                     for(int j = i + 1; j < lines.size(); j++){
                         if(isCorner(lines[i], lines[j], scanLineY)){
                             if(scan == 450){
-                                cout << j << endl;
-                                cout << lines[i].getFirstPoint().getAxis() << " " << lines[i].getFirstPoint().getOrdinat() << endl;
-                                cout << lines[i].getSecondPoint().getAxis() << " " << lines[i].getSecondPoint().getOrdinat() << endl;
-                                cout << lines[j].getFirstPoint().getAxis() << " " << lines[j].getFirstPoint().getOrdinat() << endl;
-                                cout << lines[j].getSecondPoint().getAxis() << " " << lines[j].getSecondPoint().getOrdinat() << endl;
+                                // cout << j << endl;
+                                // cout << lines[i].getFirstPoint().getAxis() << " " << lines[i].getFirstPoint().getOrdinat() << endl;
+                                // cout << lines[i].getSecondPoint().getAxis() << " " << lines[i].getSecondPoint().getOrdinat() << endl;
+                                // cout << lines[j].getFirstPoint().getAxis() << " " << lines[j].getFirstPoint().getOrdinat() << endl;
+                                // cout << lines[j].getSecondPoint().getAxis() << " " << lines[j].getSecondPoint().getOrdinat() << endl;
                             }
-                            cout << scan << endl;
+                            // cout << scan << endl;
                             // add another point
                             pair<float, float> tempEQ = lines[i].makeLine();
 
@@ -141,7 +141,7 @@ class Polygon {
 
                     if(scan == 450) {
                         for(int i = 0; i < listOfIntersectPoints.size(); i++){
-                            cout << listOfIntersectPoints[i].getAxis() << " " << listOfIntersectPoints[i].getOrdinat() << endl;
+                            //cout << listOfIntersectPoints[i].getAxis() << " " << listOfIntersectPoints[i].getOrdinat() << endl;
                         }
                     }
 

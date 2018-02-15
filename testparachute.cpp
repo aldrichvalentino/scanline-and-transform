@@ -9,8 +9,8 @@ using namespace std;
 
 int main() {
     Polygon parachute((char*)"objects/parachuteperson.txt");
-    int dx = 200;
-    int dy = 200;
+    int dx = 700;
+    int dy = 50;
     parachute.update(dx, dy);
 //    for(int i = 0; i < 200; i++){
 //        Util::clearScreen();
@@ -31,7 +31,7 @@ int main() {
     	parachute.scanLine(255,255,255);
     	parachute.print(0,0,0,255,0);
     	if (u<=35) {
-    		parachute.update(-3, -3);
+    		parachute.update(-7, -3);
     		usleep(100000);
     	} else if (u>35 && u<=55){
     		parachute.update(-2, -1);
