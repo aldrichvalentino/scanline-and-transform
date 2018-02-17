@@ -80,9 +80,8 @@ int main() {
                 usleep(100000);
         } else {
                 hit = true;
-                parachute.print(0,0,255,255,255, clip);
                 parachute.scanLine(255,108,180, clip);
-                
+                parachute.print(0,0,255,255,255, clip);
                 tire2.scanLine(130, 130, 130, clip);  
                 tire2.print(0, 0, 70, 70, 70, clip);
                 
@@ -111,12 +110,11 @@ int main() {
             clip.drawClipBorder(0,0,255,255,255);
 
             surface.print(0,0,255,255,255);
-            parachute.print(0,0,255,255,255, clip);
             parachute.scanLine(255,108,180, clip);
-            
-            tire2.print(0, 0, 70, 70, 70, clip);
+            parachute.print(0,0,255,255,255, clip);
             tire2.scanLine(130, 130, 130, clip); 
-
+            tire2.print(0, 0, 70, 70, 70, clip);
+            
             if(j < 70) {
                 tire2.update(2,5);
             } else if (j >= 70 && j < 85) {

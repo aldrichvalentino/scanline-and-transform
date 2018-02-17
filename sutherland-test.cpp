@@ -69,18 +69,22 @@ int main()
 //     }
     
 //     usleep(500000);
-    Polygon square((char*)"objects/parachute.txt");
-    Polygon square1((char*)"objects/parachuteperson.txt");
+    Polygon square((char*)"objects/plane.txt");
+    //Polygon square1((char*)"objects/tire.txt");
     
 
     for(int i = 0; i < 100; i++){
         Util::clearScreen();
         //cout << i << endl;
+        square.print(0,0,255,255,255,cl);
         square.scanLine(255,25,25,cl);
-        square1.scanLine(255,25,25,cl);
+        
+        //square1.print(0,0,255,255,255,cl);
+        //square1.scanLine(255,25,25,cl);
+        
         cl.drawClipBorder(0,0,255,255,255);
         square.update(5,5);
-        square1.update(5,5);
+        //square1.update(5,5);
         
         usleep(50000);
     }

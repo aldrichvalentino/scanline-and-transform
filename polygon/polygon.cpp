@@ -52,8 +52,14 @@ class Polygon {
 
         void print(int divx, int divy, int red, int green, int blue, Clip clip) {
             for(int i = 0; i < lines.size(); i++){
-                bool print = clip.clipLine(lines[i]);
-                if (print) lines[i].print(divx, divy, red, green, blue);
+                Line temp(
+                    lines[i].getFirstPoint().getAxis(),
+                    lines[i].getFirstPoint().getOrdinat(),
+                    lines[i].getSecondPoint().getAxis(),
+                    lines[i].getSecondPoint().getOrdinat()
+                );
+                bool print = clip.clipLine(temp);
+                if (print) temp.print(divx, divy, red, green, blue);
             }
         }
 
