@@ -6,13 +6,17 @@
 
 using namespace std;
 
+#define TRIVIAL_ACCEPT 0
+#define TRIVIAL_REJECT 1
+#define NON_TRIVIAL 2
+
 class Clip {
     public:
         Clip() {
 
         };
 
-        Clip(Line topBorder, Line bottomBorder, Line leftBorder, Line rightBorder) {
+        Clip(Line topBorder, Line rightBorder, Line bottomBorder, Line leftBorder) {
             this->topBorder.setFirstPoint(topBorder.getFirstPoint());
             this->topBorder.setSecondPoint(topBorder.getSecondPoint());
             
@@ -31,6 +35,108 @@ class Clip {
             bottomBorder.print(divx, divy, r, g, b);
             leftBorder.print(divx, divy, r, g, b);
             rightBorder.print(divx, divy, r, g, b);
+        }
+
+        void setCodeForPoint(Point &p){
+            if(p.getOrdinat() < topBorder.getFirstPoint().getOrdinat()){
+                p.setCode(0, '1'); // Top
+            }else{
+                p.setCode(0, '0');
+            }
+            if(p.getOrdinat() > bottomBorder.getFirstPoint().getOrdinat()){
+                p.setCode(1, '1'); // Bottom
+            }else{
+                p.setCode(1, '0');
+            }
+            if(p.getAxis() > rightBorder.getFirstPoint().getAxis()){
+                p.setCode(2, '1'); // Right
+            }else{
+                p.setCode(2, '0');
+            }
+            if(p.getAxis() < leftBorder.getFirstPoint().getAxis()){
+                p.setCode(3, '1'); // Left
+            }else{
+                p.setCode(3, '0');
+            }
+        }
+
+        int isVisible(Point p1,Point p2) 
+        // Assumption = p1, p2 already coded
+        {
+            int i,flag=0;
+            
+            for(i=0;i<4;i++)
+            {
+                if((p1.getCode(i)!='0') || (p2.getCode(i)!='0'))
+                    flag=1; // change the flag if there is a 1
+            }
+            
+            if(flag==0) return TRIVIAL_ACCEPT; // trivial accept
+            
+            for(i=0;i<4;i++)
+            {
+                if((p1.getCode(i)==p2.getCode(i)) && (p1.getCode(i)=='1'))
+                    flag='0'; // change the flag if '1' code appear in both points
+            }
+            
+            if(flag==0)
+                return TRIVIAL_REJECT; // trivial reject
+            else
+                return NON_TRIVIAL; // non trivial
+        }
+
+        int resetEndPoint(Point &p1, Point p2)
+        {
+            Point temp;
+            int x,y,i;
+            float m,k;
+            
+            if(p1.getCode(3)=='1')
+                x = leftBorder.getFirstPoint().getAxis();
+            
+            if(p1.getCode(2)=='1')
+                x = rightBorder.getFirstPoint().getAxis();
+            
+            if((p1.getCode(3)=='1') || (p1.getCode(2)=='1'))
+            {
+                m=(float)(p2.getOrdinat() - p1.getOrdinat())/(p2.getAxis() - p1.getAxis());
+                k=(p1.getOrdinat() + (m*(x-p1.getAxis())));
+                temp.setOrdinat(k);
+                temp.setAxis(x);
+                
+                for(i=0;i<4;i++)
+                    temp.setCode(i, p1.getCode(i));
+                
+                if(temp.getOrdinat() <= bottomBorder.getFirstPoint().getOrdinat()
+                        && temp.getOrdinat() >= topBorder.getFirstPoint().getOrdinat()){
+                    p1.setAxis(temp.getAxis());
+                    p1.setOrdinat(temp.getOrdinat());
+                    return 0;
+                }
+            }
+            
+            if(p1.getCode(0)=='1')
+                y = topBorder.getFirstPoint().getOrdinat();
+            
+            if(p1.getCode(1)=='1')
+                y = bottomBorder.getFirstPoint().getOrdinat();
+                
+            if((p1.getCode(0)=='1') || (p1.getCode(1)=='1'))
+            {
+                m=(float)(p2.getOrdinat()-p1.getOrdinat())/(p2.getAxis()-p1.getAxis());
+                k=(float)p1.getAxis()+(float)(y-p1.getOrdinat())/m;
+                temp.setAxis(k);
+                temp.setOrdinat(y);
+                
+                for(i=0;i<4;i++)
+                    temp.setCode(i, p1.getCode(i));
+                
+                p1.setAxis(temp.getAxis());
+                p1.setOrdinat(temp.getOrdinat());
+                return 0;
+            } else {
+                return 0;
+            }
         }
 
     private:

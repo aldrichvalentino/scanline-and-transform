@@ -10,15 +10,18 @@ class Point {
         Point() {
             x = 0;
             y = 0;
+            for(int i = 0; i < 4; i++) code[i] = '\0';
         }
         Point(int x, int y) {
             this->x = x;
             this->y = y;
+            for(int i = 0; i < 4; i++) code[i] = '\0';
         }
 
         Point(const Point& p) {
             this->x = p.x;
             this->y = p.y;
+            for(int i = 0; i < 4; i++) this->code[i] = p.code[i];
         }
 
         int getAxis() {
@@ -29,12 +32,20 @@ class Point {
             return this->y;
         }
 
+        char getCode(int i) {
+            return code[i];
+        }
+
         void setAxis(int x) {
             this->x = x;
         }
 
         void setOrdinat(int y) {
             this->y = y;
+        }
+
+        void setCode(int i, char code) {
+            this->code[i] = code;
         }
         
         void rotate(int degree, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY) {
@@ -88,6 +99,7 @@ class Point {
     
     private:
         float x, y;
+        char code[4];
 };
 
 #endif
