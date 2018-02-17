@@ -10,6 +10,7 @@
 #include <math.h>
 #include <algorithm>
 #include "../utils/util.cpp"
+#include "../clipping/clip.cpp"
 
 using namespace std;
 
@@ -49,9 +50,10 @@ class Polygon {
             bottomRight.setOrdinat(y1);
         }
 
-        void print(int divx, int divy, int red, int green, int blue) {
+        void print(int divx, int divy, int red, int green, int blue, Clip clip) {
             for(int i = 0; i < lines.size(); i++){
-                lines[i].print(divx, divy, red, green, blue);
+                bool print = clip.clipLine(lines[i]);
+                if (print) lines[i].print(divx, divy, red, green, blue);
             }
         }
 
@@ -63,25 +65,16 @@ class Polygon {
         }
 
         // TODO: make line dependent scan line
-        void scanLine(int red, int green, int blue) {
+        void scanLine(int red, int green, int blue, Clip clipBorder) {
             // make the scan line
             int scanLineY = topLeft.getOrdinat(); // Represent Y = c
-            // Point scanLineLeft(topLeft.getAxis(), topLeft.getOrdinat());
-            // int x = bottomRight.getAxis();
-            // Point scanLineRight(x, topLeft.getOrdinat());
-            // Line scanLine(scanLineLeft, scanLineRight);
             
             for(int scan = topLeft.getOrdinat(); scan < bottomRight.getOrdinat(); scan++){
-                // Make the line from scan line
-                // pair<float, float> linearEQ = scanLine.makeLine();
-
                 // list of points
                 vector<Point> listOfIntersectPoints;
 
                 for(int i = 0; i < lines.size(); i++){
                     // First, check if the point intersect
-                    // int firstOrdinatLine = scanLine.getFirstPoint().getOrdinat();
-                    // int secondOrdinatLine = scanLine.getSecondPoint().getOrdinat();
                     int firstOrdinatPolygon = lines[i].getFirstPoint().getOrdinat();
                     int secondOrdinatPolygon = lines[i].getSecondPoint().getOrdinat();
 
@@ -103,14 +96,6 @@ class Polygon {
                     // check if it has a corner
                     for(int j = i + 1; j < lines.size(); j++){
                         if(isCorner(lines[i], lines[j], scanLineY)){
-                            if(scan == 450){
-                                // cout << j << endl;
-                                // cout << lines[i].getFirstPoint().getAxis() << " " << lines[i].getFirstPoint().getOrdinat() << endl;
-                                // cout << lines[i].getSecondPoint().getAxis() << " " << lines[i].getSecondPoint().getOrdinat() << endl;
-                                // cout << lines[j].getFirstPoint().getAxis() << " " << lines[j].getFirstPoint().getOrdinat() << endl;
-                                // cout << lines[j].getSecondPoint().getAxis() << " " << lines[j].getSecondPoint().getOrdinat() << endl;
-                            }
-                            // cout << scan << endl;
                             // add another point
                             pair<float, float> tempEQ = lines[i].makeLine();
 
@@ -119,7 +104,6 @@ class Polygon {
                                 listOfIntersectPoints.push_back(tempPoint);
                             } else {
                                 float x = (scanLineY - tempEQ.second) / tempEQ.first;
-                                // float y = linearEQ.first * x + linearEQ.second;
                                 Point tempPoint(x, scanLineY);
                                 listOfIntersectPoints.push_back(tempPoint);
                             }
@@ -141,25 +125,6 @@ class Polygon {
                         listOfIntersectPoints[i] = temp;
                     }
 
-                    if(scan == 450) {
-                        for(int i = 0; i < listOfIntersectPoints.size(); i++){
-                            //cout << listOfIntersectPoints[i].getAxis() << " " << listOfIntersectPoints[i].getOrdinat() << endl;
-                        }
-                    }
-
-                    // delete unusable points, if there are double points
-                    // int count = (listOfIntersectPoints.size() % 2 == 1) ?
-                    //         (listOfIntersectPoints.size() - 1) : listOfIntersectPoints.size();
-                    // for(int i = 0; i < count; i++) {
-                    //     if(listOfIntersectPoints[i].getAxis() == listOfIntersectPoints[i+1].getAxis() &&
-                    //         listOfIntersectPoints[i].getOrdinat() == listOfIntersectPoints[i+1].getOrdinat()){
-                    //             // Check if the line is a corner
-
-                    //             listOfIntersectPoints.erase(listOfIntersectPoints.begin() + i + 1);
-                    //         }
-                    //     i++;
-                    // }
-
                     // only color if total point is more than one
                     if(listOfIntersectPoints.size() > 1){
                         // check if the count is odd
@@ -170,22 +135,28 @@ class Polygon {
                             // don't color the border
                             listOfIntersectPoints[i].setAxis(listOfIntersectPoints[i].getAxis()+1);
                             listOfIntersectPoints[i+1].setAxis(listOfIntersectPoints[i+1].getAxis()-1);
-
+                            
                             Line line(listOfIntersectPoints[i], listOfIntersectPoints[i+1]);
-                            line.print(0,0, red, green, blue);
+                            //cout << "lama :" << line.getFirstPoint().getAxis() << " " << line.getSecondPoint().getOrdinat() << " ";
+                            //if(scan == 501) cout << "yo nyampe" << endl;
+                            bool print = clipBorder.clipLine(line);
+                            //cout << "baru: " << line.getFirstPoint().getAxis() << " " << line.getSecondPoint().getOrdinat() << " ";
+                            // if(scan == 501){
+                            //     cout << "sudah dapet print " << print << endl;
+                            //     cout << line.getFirstPoint().getAxis() << " " << line.getFirstPoint().getOrdinat() << " "
+                            //         << line.getSecondPoint().getAxis() << " " << line.getSecondPoint().getOrdinat() << endl;
+                            // } 
+                            if(print)
+                                line.print(0,0, red, green, blue);
 
                             i++;
+                            //if(scan == 501) cout << "kelar" << endl;
+                            
                         }
                     }
                 }
 
-                // scanLineLeft.setOrdinat(scanLineLeft.getOrdinat() + 1);
-                // scanLineRight.setOrdinat(scanLineRight.getOrdinat() + 1);
-                // // move the scan line down
-                // scanLine.setFirstPoint(scanLineLeft);
-                // scanLine.setSecondPoint(scanLineRight);
                 scanLineY++;
-                // for(int j=0; j < 50000000; j++);
             }
         }
 
@@ -343,14 +314,14 @@ class Polygon {
     }
 
 
-    void bounce(float ratio){
+    void bounce(float ratio, Clip clipBorder){
         float height = 200;
         while (height * ratio > 0) {
             for (int i = 0; i < height; ++i){
                 Util::clearScreen();
 
-                this->scanLine(150, 0, 150);
-                this->print(0, 0, 0, 255, 0);
+                this->scanLine(150, 0, 150, clipBorder);
+                this->print(0, 0, 0, 255, 0, clipBorder);
                 this->fall();
                 this->update(1,0);
             }
@@ -358,8 +329,8 @@ class Polygon {
             for (int i = 0; i < height; ++i){
                 Util::clearScreen();
 
-                this->scanLine(150, 0, 150);
-                this->print(0, 0, 0, 255, 0);
+                this->scanLine(150, 0, 150, clipBorder);
+                this->print(0, 0, 0, 255, 0, clipBorder);
                 this->up();
                 this->update(1,0);
             }

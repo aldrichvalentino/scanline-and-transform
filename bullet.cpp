@@ -21,7 +21,7 @@ int main() {
     //}
     
     for(int i = 0; i < 1000; i++){
-        bullet.scanLine(150, 0, 150);
+        //bullet.scanLine(150, 0, 150);
         bullet.print(0,0,0,255,0);
 
         bullet.update(30,-50);

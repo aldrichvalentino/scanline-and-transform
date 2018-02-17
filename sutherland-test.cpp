@@ -6,67 +6,84 @@
 #include <unistd.h>
 #include "line/line.cpp"
 #include "utils/util.cpp"
-#include "clipping/clip.cpp"
+#include "polygon/polygon.cpp"
 
 using namespace std;
   
 int main()
 {
-    Line l1(100,100,300,100);
-    Line l2(300,100,300,300);
-    Line l3(300,300,100,300);
-    Line l4(100,300,100,100);
+    Line l1(100,100,500,100);
+    Line l2(500,100,500,500);
+    Line l3(500,500,100,500);
+    Line l4(100,500,100,100);
     Clip cl(l1, l2, l3, l4);
     
-    int v, gm;
-    Point p1, p2;
-    int x, y;
-    //PT p1,p2,p3,p4,ptemp;
+//     int v, gm;
+//     Point p1, p2;
+//     int x, y;
+//     //PT p1,p2,p3,p4,ptemp;
     
-    cout<<"\nEnter x1 and y1\n";
-    cin>> x >> y;
-    p1.setAxis(x); p1.setOrdinat(y);
-    cout<<"\nEnter x2 and y2\n";
-    cin>> x >> y;
-    p2.setAxis(x); p2.setOrdinat(y);
-    Line line(p1, p2);
+//     cout<<"\nEnter x1 and y1\n";
+//     cin>> x >> y;
+//     p1.setAxis(x); p1.setOrdinat(y);
+//     cout<<"\nEnter x2 and y2\n";
+//     cin>> x >> y;
+//     p2.setAxis(x); p2.setOrdinat(y);
+//     Line line(p1, p2);
     
     
-    Util::clearScreen();
-    cl.drawClipBorder(0,0,255,255,255);
-    usleep(500000);
+//     Util::clearScreen();
+//     cl.drawClipBorder(0,0,255,255,255);
+//     usleep(500000);
     
-    line.print(0,0,255,255,255);
-    usleep(500000);
-    Util::clearScreen();
+//     line.print(0,0,255,255,255);
+//     usleep(500000);
+//     Util::clearScreen();
     
-    usleep(500000);
-    cl.setCodeForPoint(p1);
-    cl.setCodeForPoint(p2);
-    line.setFirstPoint(p1);
-    line.setSecondPoint(p2);
-    v= cl.isVisible(p1, p2);
-    usleep(500000);
+//     usleep(500000);
+//     cl.setCodeForPoint(p1);
+//     cl.setCodeForPoint(p2);
+//     line.setFirstPoint(p1);
+//     line.setSecondPoint(p2);
+//     v= cl.isVisible(p1, p2);
+//     cout << v << endl;
+//     usleep(500000);
     
-    switch(v)
-    {
-    case 0: cl.drawClipBorder(0, 0, 255,255,255);
-            usleep(500000);
-            line.print(0,0,255,255,255);
-            break;
-    case 1: cl.drawClipBorder(0, 0, 255,255,255);
-            usleep(500000);
-            break;
-    case 2: cl.resetEndPoint(p1, p2);
-            cl.resetEndPoint(p2, p1);
-            line.setFirstPoint(p1);
-            line.setSecondPoint(p2);
-            cl.drawClipBorder(0,0,255,255,255);
-            usleep(500000);
-            line.print(0,0,255,255,255);
-            break;
+//     switch(v)
+//     {
+//     case 0: cl.drawClipBorder(0, 0, 255,255,255);
+//             usleep(500000);
+//             line.print(0,0,255,255,255);
+//             break;
+//     case 1: cl.drawClipBorder(0, 0, 255,255,255);
+//             usleep(500000);
+//             break;
+//     case 2: cl.resetEndPoint(p1, p2);
+//             cl.resetEndPoint(p2, p1);
+//             line.setFirstPoint(p1);
+//             line.setSecondPoint(p2);
+//             cl.drawClipBorder(0,0,255,255,255);
+//             usleep(500000);
+//             line.print(0,0,255,255,255);
+//             break;
+//     }
+    
+//     usleep(500000);
+    Polygon square((char*)"objects/parachute.txt");
+    Polygon square1((char*)"objects/parachuteperson.txt");
+    
+
+    for(int i = 0; i < 100; i++){
+        Util::clearScreen();
+        //cout << i << endl;
+        square.scanLine(255,25,25,cl);
+        square1.scanLine(255,25,25,cl);
+        cl.drawClipBorder(0,0,255,255,255);
+        square.update(5,5);
+        square1.update(5,5);
+        
+        usleep(50000);
     }
-    
-    usleep(500000);
+
     return 0;
 }

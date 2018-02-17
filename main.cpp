@@ -6,8 +6,12 @@
 
 using namespace std;
 
-
-
+// Global Clip border
+Line mtop(100,100,500,100);
+Line mright(500,100,500,500);
+Line mbottom(500,500,100,500);
+Line mleft(100,500,100,100);
+Clip clip(mtop, mright, mbottom, mleft);
 
 int main() {
     Polygon plane ((char*)"objects/plane.txt");
@@ -45,7 +49,7 @@ int main() {
     bool hit =  false;
     while(i < 1.12) {
         Util::clearScreen();
-
+        clip.drawClipBorder(0,0,255,255,255);
         surface.print(0,0,255,255,255);
         i += 0.005;
         tire.scaleByPoint(i, middlePointPlane);
@@ -54,31 +58,34 @@ int main() {
         propeller2.scaleByPoint(i, middlePointPlane);
         propeller.rotate(20);
         propeller2.rotate(20);
-        plane.print(0, 0, 0, 0, 0);
-        plane.scanLine(0, 191, 255);
-        tire.print(0, 0, 70, 70, 70);
-        tire.scanLine(130, 130, 130);
-        propeller.print(0, 0, 0, 128, 0);
-        propeller.scanLine(0, 128, 0);
-        propeller2.print(0, 0, 0, 128, 0);
-        propeller2.scanLine(0, 128, 0);
+        plane.print(0, 0, 0, 191, 255,clip);
+        plane.scanLine(0, 191, 255, clip);
+        tire.print(0, 0, 70, 70, 70,clip);
+        tire.scanLine(130, 130, 130, clip);
+        propeller.print(0, 0, 0, 128, 0, clip);
+        propeller.scanLine(0, 128, 0, clip);
+        propeller2.print(0, 0, 0, 128, 0, clip);
+        propeller2.scanLine(0, 128, 0, clip);
         if(!plane.isHitBy(bullet)) {
             if (!hit){
-                bullet.scanLine(255, 0, 0);
-                bullet.print(0,0,0,0,0);
+                
+                bullet.print(0,0,255,0,0, clip);
+                bullet.scanLine(255, 0, 0, clip);
                 bullet.update(30,-58);
                 bullet.rotate(2.5);
             }
                 tire2.scaleByPoint(i, middlePointPlane);
-                tire2.print(0, 0, 70, 70, 70);
-                tire2.scanLine(130, 130, 130);  
+                tire2.print(0, 0, 70, 70, 70, clip);
+                tire2.scanLine(130, 130, 130, clip);  
                 usleep(100000);
         } else {
                 hit = true;
-                parachute.scanLine(255,108,180);
-                parachute.print(0,0,255,255,255);
-                tire2.print(0, 0, 70, 70, 70);
-                tire2.scanLine(130, 130, 130);  
+                parachute.print(0,0,255,255,255, clip);
+                parachute.scanLine(255,108,180, clip);
+                
+                tire2.scanLine(130, 130, 130, clip);  
+                tire2.print(0, 0, 70, 70, 70, clip);
+                
                 j++; u++;
                 if (u<=20) {
                     parachute.update(-7, -3);
@@ -101,12 +108,14 @@ int main() {
     if(hit) {
         while (j<=height) {
             Util::clearScreen();
+            clip.drawClipBorder(0,0,255,255,255);
 
             surface.print(0,0,255,255,255);
-            parachute.scanLine(255,108,180);
-            parachute.print(0,0,255,255,255);
-            tire2.print(0, 0, 70, 70, 70);
-            tire2.scanLine(130, 130, 130); 
+            parachute.print(0,0,255,255,255, clip);
+            parachute.scanLine(255,108,180, clip);
+            
+            tire2.print(0, 0, 70, 70, 70, clip);
+            tire2.scanLine(130, 130, 130, clip); 
 
             if(j < 70) {
                 tire2.update(2,5);

@@ -63,7 +63,7 @@ class Clip {
         int isVisible(Point p1,Point p2) 
         // Assumption = p1, p2 already coded
         {
-            int i,flag=0;
+            int i,flag=0, same=1;
             
             for(i=0;i<4;i++)
             {
@@ -75,14 +75,21 @@ class Clip {
             
             for(i=0;i<4;i++)
             {
-                if((p1.getCode(i)==p2.getCode(i)) && (p1.getCode(i)=='1'))
-                    flag='0'; // change the flag if '1' code appear in both points
+                if((p1.getCode(i)==p2.getCode(i)) && (p1.getCode(i)=='1')) {
+                    flag=0; // change the flag if '1' code appear in both points
+                }
+                if(p1.getCode(i)==p2.getCode(i)) {
+                    same=0; // handles if points are in the same area
+                }
             }
-            
-            if(flag==0)
+
+            if(flag==0){
                 return TRIVIAL_REJECT; // trivial reject
-            else
+            } else if(same == 1){
+                return TRIVIAL_REJECT;
+            } else {
                 return NON_TRIVIAL; // non trivial
+            }
         }
 
         int resetEndPoint(Point &p1, Point p2)
@@ -136,6 +143,36 @@ class Clip {
                 return 0;
             } else {
                 return 0;
+            }
+        }
+
+        bool clipLine(Line &line) {
+            Point temp1 = line.getFirstPoint();
+            Point temp2 = line.getSecondPoint();
+            setCodeForPoint(temp1);
+            setCodeForPoint(temp2);
+                
+            int visibility = isVisible(temp1, temp2);
+            //cout << visibility << endl;
+            if(visibility == TRIVIAL_ACCEPT){
+                return true; // print the line
+            } else if(visibility == TRIVIAL_REJECT){
+                return false; // don't print the line
+            } else {
+                // clip the line
+                resetEndPoint(temp1, temp2);
+                resetEndPoint(temp2, temp1);
+
+                // cout << "lama" << line.getFirstPoint().getAxis() << line.getFirstPoint().getOrdinat() 
+                //     << line.getSecondPoint().getAxis() << line.getSecondPoint().getOrdinat() << endl;
+ 
+                line.setFirstPoint(temp1);
+                line.setSecondPoint(temp2);
+
+                // cout << "baru" << line.getFirstPoint().getAxis() << line.getFirstPoint().getOrdinat() 
+                //     << line.getSecondPoint().getAxis() << line.getSecondPoint().getOrdinat() << endl;
+
+                return true;
             }
         }
 
