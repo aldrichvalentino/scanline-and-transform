@@ -26,6 +26,13 @@ class Line {
             this->p2.setOrdinat(p2.getOrdinat());
         }
 
+        Line(int x1, int y1, int x2, int y2) {
+            this->p1.setAxis(x1);
+            this->p1.setOrdinat(y1);
+            this->p2.setAxis(x2);
+            this->p2.setOrdinat(y2);
+        }
+
         Point getFirstPoint() {
             return p1;
         }
