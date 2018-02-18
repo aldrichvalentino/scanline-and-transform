@@ -50,7 +50,7 @@ class Polygon {
             bottomRight.setOrdinat(y1);
         }
 
-        void print(int divx, int divy, int red, int green, int blue, Clip clip) {
+        void print(int divx, int divy, int red, int green, int blue, Clip clip, int*** buffer) {
             for(int i = 0; i < lines.size(); i++){
                 Line temp(
                     lines[i].getFirstPoint().getAxis(),
@@ -59,7 +59,7 @@ class Polygon {
                     lines[i].getSecondPoint().getOrdinat()
                 );
                 bool print = clip.clipLine(temp);
-                if (print) temp.print(divx, divy, red, green, blue);
+                if (print) temp.print(divx, divy, red, green, blue, buffer);
             }
         }
 
@@ -71,7 +71,7 @@ class Polygon {
         }
 
         // TODO: make line dependent scan line
-        void scanLine(int red, int green, int blue, Clip clipBorder) {
+        void scanLine(int red, int green, int blue, Clip clipBorder, int*** buffer) {
             // make the scan line
             int scanLineY = topLeft.getOrdinat(); // Represent Y = c
             
@@ -153,7 +153,7 @@ class Polygon {
                             //         << line.getSecondPoint().getAxis() << " " << line.getSecondPoint().getOrdinat() << endl;
                             // } 
                             if(print)
-                                line.print(0,0, red, green, blue);
+                                line.print(0,0, red, green, blue, buffer);
 
                             i++;
                             //if(scan == 501) cout << "kelar" << endl;
@@ -324,19 +324,19 @@ class Polygon {
         float height = 200;
         while (height * ratio > 0) {
             for (int i = 0; i < height; ++i){
-                Util::clearScreen();
+                //Util::clearScreen();
 
-                this->scanLine(150, 0, 150, clipBorder);
-                this->print(0, 0, 0, 255, 0, clipBorder);
+                // this->scanLine(150, 0, 150, clipBorder);
+                // this->print(0, 0, 0, 255, 0, clipBorder);
                 this->fall();
                 this->update(1,0);
             }
             height *= ratio;
             for (int i = 0; i < height; ++i){
-                Util::clearScreen();
+                //Util::clearScreen();
 
-                this->scanLine(150, 0, 150, clipBorder);
-                this->print(0, 0, 0, 255, 0, clipBorder);
+                // this->scanLine(150, 0, 150, clipBorder);
+                // this->print(0, 0, 0, 255, 0, clipBorder);
                 this->up();
                 this->update(1,0);
             }

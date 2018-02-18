@@ -30,11 +30,11 @@ class Clip {
             this->rightBorder.setSecondPoint(rightBorder.getSecondPoint());
         }
 
-        void drawClipBorder(int divx, int divy, int r, int g, int b) {
-            topBorder.print(divx, divy, r, g, b);
-            bottomBorder.print(divx, divy, r, g, b);
-            leftBorder.print(divx, divy, r, g, b);
-            rightBorder.print(divx, divy, r, g, b);
+        void drawClipBorder(int divx, int divy, int r, int g, int b, int *** buffer) {
+            topBorder.print(divx, divy, r, g, b, buffer);
+            bottomBorder.print(divx, divy, r, g, b, buffer);
+            leftBorder.print(divx, divy, r, g, b, buffer);
+            rightBorder.print(divx, divy, r, g, b, buffer);
         }
 
         void setCodeForPoint(Point &p){

@@ -10,6 +10,7 @@
 #include <linux/fb.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+#include <iostream>
 
 using namespace std;
 
@@ -67,7 +68,7 @@ class Line {
             return make_pair(a, b);
         }
 
-        void print(int divx, int divy, int r, int g, int b){
+        void print(int divx, int divy, int r, int g, int b, int*** buffer){
             int fbfd = 0;
             struct fb_var_screeninfo vinfo;
             struct fb_fix_screeninfo finfo;
@@ -78,36 +79,36 @@ class Line {
             int maxY;
 
             // Open the file for reading and writing
-            fbfd = open("/dev/fb0", O_RDWR);
-            if (fbfd == -1) {
-                perror("Error: cannot open framebuffer device");
-                exit(1);
-            }
-            //printf("The framebuffer device was opened successfully.\n");
+            // fbfd = open("/dev/fb0", O_RDWR);
+            // if (fbfd == -1) {
+            //     perror("Error: cannot open framebuffer device");
+            //     exit(1);
+            // }
+            // //printf("The framebuffer device was opened successfully.\n");
 
-            // Get fixed screen information
-            if (ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo) == -1) {
-                perror("Error reading fixed information");
-                exit(2);
-            }
+            // // Get fixed screen information
+            // if (ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo) == -1) {
+            //     perror("Error reading fixed information");
+            //     exit(2);
+            // }
 
-            // Get variable screen information
-            if (ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo) == -1) {
-                perror("Error reading variable information");
-                exit(3);
-            }
+            // // Get variable screen information
+            // if (ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo) == -1) {
+            //     perror("Error reading variable information");
+            //     exit(3);
+            // }
 
-            //printf("%dx%d, %dbpp\n", vinfo.xres, vinfo.yres, vinfo.bits_per_pixel);
+            // //printf("%dx%d, %dbpp\n", vinfo.xres, vinfo.yres, vinfo.bits_per_pixel);
 
-            // Figure out the size of the screen in bytes
-            screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8;
+            // // Figure out the size of the screen in bytes
+            // screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8;
 
-            // Map the device to memory
-            fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
-            if (*fbp == -1) {
-                perror("Error: failed to map framebuffer device to memory");
-                exit(4);
-            }
+            // // Map the device to memory
+            // fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
+            // if (*fbp == -1) {
+            //     perror("Error: failed to map framebuffer device to memory");
+            //     exit(4);
+            // }
 
             int x0 = p1.getAxis();
             int y0 = p1.getOrdinat();
@@ -125,14 +126,21 @@ class Line {
             
             for(;;){
                 //setPixel(x0,y0);
-                location = (x0+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
-                                (y0+vinfo.yoffset) * finfo.line_length;
-                if(y0 > 10 && y0 < vinfo.yres -10 && x0 > 5 && x0 < vinfo.xres){ // escape seg fault
-                    *(fbp + location) = b;        // Some blue
-                    *(fbp + location + 1) = g;     // A little green
-                    *(fbp + location + 2) = r;    // A lot of red
-                    *(fbp + location + 3) = 0;      // No transparency
+                // location = (x0+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                //                 (y0+vinfo.yoffset) * finfo.line_length;
+                if(y0 > 10 && y0 < 750 -10 && x0 > 5 && x0 < 1430){ // escape seg fault
+                //     *(fbp + location) = b;        // Some blue
+                //     *(fbp + location + 1) = g;     // A little green
+                //     *(fbp + location + 2) = r;    // A lot of red
+                //     *(fbp + location + 3) = 0;      // No transparency
+                // }
+                //cout << "masuk print line ga?" << endl;
+                buffer[y0][x0][0] = b;
+                buffer[y0][x0][1] = g;
+                buffer[y0][x0][2] = r;
+                buffer[y0][x0][3] = 0;
                 }
+
                 if (x0==x1 && y0==y1) break;
                 e2 = err;
                 if (e2 >-dx) { err -= dy; x0 += sx; }
