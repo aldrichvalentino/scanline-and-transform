@@ -3,6 +3,11 @@
 #include "polygon/polygon.cpp"
 #include "utils/util.cpp"
 #include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <termios.h>
+
+struct termios initial_settings, new_settings;
 
 using namespace std;
 
@@ -15,8 +20,22 @@ Line mright(1200,100,1200,600);
 Line mbottom(1200,600,100,600);
 Line mleft(100,600,100,100);
 Clip clip(mtop, mright, mbottom, mleft);
+Point middleClip(650, 350);
 
 int main() {
+    // unsigned char key;
+    // // use input from user
+    // tcgetattr(0,&initial_settings);
+    
+    // new_settings = initial_settings;
+    // new_settings.c_lflag &= ~ICANON;
+    // new_settings.c_lflag &= ~ECHO;
+    // new_settings.c_lflag &= ~ISIG;
+    // new_settings.c_cc[VMIN] = 0;
+    // new_settings.c_cc[VTIME] = 0;
+    
+    // tcsetattr(0, TCSANOW, &new_settings);
+
     Polygon plane ((char*)"objects/plane.txt");
     Polygon tire ((char*)"objects/tire.txt");
     Polygon tire2 ((char*)"objects/tire.txt");
@@ -45,6 +64,7 @@ int main() {
     float i = 1;
     int j = 0;
     int u = 0;
+    int n;
 
     Point p1(100, 900);
     Point p2(1500, 900);
@@ -53,6 +73,20 @@ int main() {
     while(i < 1.12) {
         Util::printScreen(frameBufferArray);
         frameBufferArray = Util::initFrameBuffer();
+
+        if(i >= 1.04 && i <= 1.05) {
+            tire.scaleByPoint(1.5, middleClip);
+            tire2.scaleByPoint(1.5, middleClip);
+            plane.scaleByPoint(1.5, middleClip);
+            propeller.scaleByPoint(1.5, middleClip);
+            propeller2.scaleByPoint(1.5, middleClip);    
+        } else if(i >= 1.08 && i <= 1.09){
+            tire.scaleByPoint(0.5, middleClip);
+            tire2.scaleByPoint(0.6, middleClip);
+            plane.scaleByPoint(0.5, middleClip);
+            propeller.scaleByPoint(0.5, middleClip);
+            propeller2.scaleByPoint(0.5, middleClip);    
+        }
 
         clip.drawClipBorder(0,0,255,255,255, frameBufferArray);
         surface.print(0,0,255,255,255, frameBufferArray);
@@ -73,12 +107,16 @@ int main() {
         propeller2.scanLine(0, 128, 0, clip, frameBufferArray);
         if(!plane.isHitBy(bullet)) {
             if (!hit){
-                
                 bullet.print(0,0,255,0,0, clip, frameBufferArray);
                 bullet.scanLine(255, 0, 0, clip, frameBufferArray);
                 bullet.update(30,-58);
                 bullet.rotate(2.5);
             }
+                // if(i >= 1.04 && i <= 1.05) {
+                //     tire2.scaleByPoint(1.5, middleClip);   
+                // } else if(i >= 1.08 && i <= 1.09){
+                //     tire2.scaleByPoint(0.8, middleClip);   
+                // }
                 tire2.scaleByPoint(i, middlePointPlane);
                 tire2.print(0, 0, 70, 70, 70, clip, frameBufferArray);
                 tire2.scanLine(130, 130, 130, clip, frameBufferArray);  
@@ -89,7 +127,6 @@ int main() {
                 parachute.print(0,0,255,255,255, clip, frameBufferArray);
                 tire2.scanLine(130, 130, 130, clip, frameBufferArray);  
                 tire2.print(0, 0, 70, 70, 70, clip, frameBufferArray);
-                
                 j++; u++;
                 if (u<=20) {
                     parachute.update(-7, -3);
@@ -161,6 +198,8 @@ int main() {
             j++; u++;
         }
     }
+
+    tcsetattr(0, TCSANOW, &initial_settings);
 
     return 0;
 }
