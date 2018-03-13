@@ -23,19 +23,6 @@ Clip clip(mtop, mright, mbottom, mleft);
 Point middleClip(650, 350);
 
 int main() {
-    // unsigned char key;
-    // // use input from user
-    // tcgetattr(0,&initial_settings);
-    
-    // new_settings = initial_settings;
-    // new_settings.c_lflag &= ~ICANON;
-    // new_settings.c_lflag &= ~ECHO;
-    // new_settings.c_lflag &= ~ISIG;
-    // new_settings.c_cc[VMIN] = 0;
-    // new_settings.c_cc[VTIME] = 0;
-    
-    // tcsetattr(0, TCSANOW, &new_settings);
-
     Polygon plane ((char*)"objects/plane.txt");
     Polygon tire ((char*)"objects/tire.txt");
     Polygon tire2 ((char*)"objects/tire.txt");
@@ -43,6 +30,7 @@ int main() {
     Polygon propeller2 ((char*)"objects/propeller.txt");
     Polygon bullet((char*)"objects/bullet.txt");
     Polygon parachute((char*)"objects/parachuteperson.txt");
+    
     int dx = 500;
     int dy = 150;
     parachute.update(dx, dy);
@@ -70,23 +58,11 @@ int main() {
     Point p2(1500, 900);
     Line surface(p1,p2);
     bool hit =  false;
+    frameBufferArray = Util::initFrameBuffer();
+    bool hitByBullet = false;
     while(i < 1.12) {
         Util::printScreen(frameBufferArray);
-        frameBufferArray = Util::initFrameBuffer();
-
-        if(i >= 1.04 && i <= 1.05) {
-            tire.scaleByPoint(1.5, middleClip);
-            tire2.scaleByPoint(1.5, middleClip);
-            plane.scaleByPoint(1.5, middleClip);
-            propeller.scaleByPoint(1.5, middleClip);
-            propeller2.scaleByPoint(1.5, middleClip);    
-        } else if(i >= 1.08 && i <= 1.09){
-            tire.scaleByPoint(0.5, middleClip);
-            tire2.scaleByPoint(0.6, middleClip);
-            plane.scaleByPoint(0.5, middleClip);
-            propeller.scaleByPoint(0.5, middleClip);
-            propeller2.scaleByPoint(0.5, middleClip);    
-        }
+        Util::clearFrameBuffer(frameBufferArray);
 
         clip.drawClipBorder(0,0,255,255,255, frameBufferArray);
         surface.print(0,0,255,255,255, frameBufferArray);
@@ -105,18 +81,16 @@ int main() {
         propeller.scanLine(0, 128, 0, clip, frameBufferArray);
         propeller2.print(0, 0, 0, 128, 0, clip, frameBufferArray);
         propeller2.scanLine(0, 128, 0, clip, frameBufferArray);
-        if(!plane.isHitBy(bullet)) {
+        if(!hitByBullet) {
+            hitByBullet = plane.isHitBy(bullet);
+        } 
+        if(!hitByBullet) {
             if (!hit){
                 bullet.print(0,0,255,0,0, clip, frameBufferArray);
                 bullet.scanLine(255, 0, 0, clip, frameBufferArray);
                 bullet.update(30,-58);
                 bullet.rotate(2.5);
             }
-                // if(i >= 1.04 && i <= 1.05) {
-                //     tire2.scaleByPoint(1.5, middleClip);   
-                // } else if(i >= 1.08 && i <= 1.09){
-                //     tire2.scaleByPoint(0.8, middleClip);   
-                // }
                 tire2.scaleByPoint(i, middlePointPlane);
                 tire2.print(0, 0, 70, 70, 70, clip, frameBufferArray);
                 tire2.scanLine(130, 130, 130, clip, frameBufferArray);  
@@ -138,21 +112,15 @@ int main() {
                     usleep(1000);
                 }
         } 
+        usleep(16);
     }
 
     int height = 400;
-
-    // if(plane.isHitBy(bullet)) {
-    //     hit = true;
-    // }
-
     if(hit) {
         while (j<=height) {
             Util::printScreen(frameBufferArray);
-            frameBufferArray = Util::initFrameBuffer();
-
+            Util::clearFrameBuffer(frameBufferArray);
             clip.drawClipBorder(0,0,255,255,255, frameBufferArray);
-
             surface.print(0,0,255,255,255, frameBufferArray);
             parachute.scanLine(255,108,180, clip, frameBufferArray);
             parachute.print(0,0,255,255,255, clip, frameBufferArray);
@@ -197,6 +165,7 @@ int main() {
             }
             j++; u++;
         }
+        usleep(16);
     }
 
     tcsetattr(0, TCSANOW, &initial_settings);
